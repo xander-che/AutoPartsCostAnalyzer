@@ -1,22 +1,91 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PDF Upload</title>
+    <title>АСЗ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        h1, h3 {
+            margin: 10px 0;
+        }
+
+        form {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 8px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: left;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload PDF for Parsing</h1>
+    <h1>Анализатор стоимости запчастей</h1>
+    <h3>Загрузите файл для поиска запчастей</h3>
 
     <form method="post" enctype="multipart/form-data" action="/upload">
         <input type="file" name="file" accept=".pdf" required>
-        <button type="submit">Upload</button>
+        <button type="submit">Загрузить</button>
     </form>
 
-    <div id="result" style="margin-top: 20px;"></div>
+    <div id="result"></div>
 
     <script>
         document.querySelector('form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
+
+            // Показываем индикатор загрузки
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Обработка файла...</p>';
 
             try {
                 const response = await fetch('/upload', {
@@ -25,12 +94,12 @@
                 });
 
                 const result = await response.json();
-                document.getElementById('result').innerHTML =
+                resultDiv.innerHTML =
                     `<pre>${JSON.stringify(result, null, 2)}</pre>`;
 
             } catch (error) {
-                document.getElementById('result').innerHTML =
-                    `<p style="color:red">Error: ${error.message}</p>`;
+                resultDiv.innerHTML =
+                    `<p class="error">Ошибка: ${error.message}</p>`;
             }
         });
     </script>
