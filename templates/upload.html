@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>АСA</title>
+    <title>АСА</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,33 +14,61 @@
             justify-content: center;
             min-height: 100vh;
             box-sizing: border-box;
+            background-color: #f5f5f5;
         }
 
-        h1, h3 {
-            margin: 10px 0;
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 800px;
         }
 
-        form {
-            margin: 20px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
         }
 
-        input[type="file"] {
-            margin-bottom: 10px;
+        h3 {
+            color: #7f8c8d;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        select, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
         }
 
         button {
-            padding: 8px 20px;
+            padding: 12px 25px;
             background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
         }
 
         button:hover {
@@ -53,8 +81,7 @@
         }
 
         #result {
-            width: 80%;
-            max-width: 800px;
+            width: 100%;
             margin: 20px auto;
             text-align: left;
         }
@@ -69,10 +96,9 @@
         }
 
         .error {
-            color: red;
+            color: #e74c3c;
         }
 
-        /* Стили для индикатора загрузки */
         .loader-container {
             display: flex;
             justify-content: center;
@@ -99,19 +125,74 @@
             margin-top: 15px;
             color: #4CAF50;
             font-weight: bold;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>Анализатор стоимости автозапчастей</h1>
-    <h3>Загрузите файл для поиска запчастей</h3>
+    <div class="container">
+        <h1>Анализатор Стоимости Автозапчастей</h1>
+        <h3>Загрузите файл и укажите параметры для поиска</h3>
 
-    <form method="post" enctype="multipart/form-data" action="/upload" id="uploadForm">
-        <input type="file" name="file" accept=".pdf" required>
-        <button type="submit" id="submitBtn">Загрузить</button>
-    </form>
+        <form method="post" enctype="multipart/form-data" action="/upload" id="uploadForm">
+            <div class="form-group">
+                <label for="data_source">Источник данных:</label>
+                <select id="data_source" name="data_source" required>
+                    <option value="emex.ru" selected>emex.ru</option>
+                </select>
+            </div>
 
-    <div id="result"></div>
+            <div class="form-group">
+                <label for="rating">Минимальный рейтинг поставщика:</label>
+                <select id="rating" name="rating" required>
+                    <option value="" disabled selected>Выберите рейтинг</option>
+                    <!-- Генерация значений от 3.5 до 5 с шагом 0.1 -->
+                    <script>
+                        for (let i = 35; i <= 50; i++) {
+                            const value = (i / 10).toFixed(1);
+                            document.write(`<option value="${value}">${value}</option>`);
+                        }
+                    </script>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="availability">Минимальное наличие на складе:</label>
+                <select id="availability" name="availability" required>
+                    <option value="" disabled selected>Выберите количество</option>
+                    <!-- Генерация значений от 5 до 20 -->
+                    <script>
+                        for (let i = 5; i <= 20; i++) {
+                            document.write(`<option value="${i}">${i}</option>`);
+                        }
+                    </script>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="delivery_time">Максимальный срок доставки (дней):</label>
+                <select id="delivery_time" name="delivery_time" required>
+                    <option value="" disabled selected>Выберите срок</option>
+                    <!-- Генерация значений от 1 до 30 -->
+                    <script>
+                        for (let i = 1; i <= 30; i++) {
+                            document.write(`<option value="${i}">${i}</option>`);
+                        }
+                    </script>
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="file">PDF файл с запчастями:</label>
+                <input type="file" id="file" name="file" accept=".pdf" required>
+            </div>
+
+            <button type="submit" id="submitBtn">Найти запчасти</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
 
     <script>
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
@@ -120,15 +201,13 @@
             const resultDiv = document.getElementById('result');
             const submitBtn = document.getElementById('submitBtn');
 
-            // Блокируем кнопку во время загрузки
             submitBtn.disabled = true;
 
-            // Показываем индикатор загрузки
             resultDiv.innerHTML = `
                 <div class="loader-container">
                     <div class="loader"></div>
                 </div>
-                <p class="loading-text">Обрабатываем ваш файл...</p>
+                <p class="loading-text">Ищем запчасти по вашим параметрам...</p>
             `;
 
             try {
@@ -145,7 +224,6 @@
                 resultDiv.innerHTML =
                     `<p class="error">Ошибка: ${error.message}</p>`;
             } finally {
-                // Разблокируем кнопку после завершения
                 submitBtn.disabled = false;
             }
         });
