@@ -2,10 +2,10 @@ import os
 import tempfile
 import pdfplumber
 from models.entry_data_model import EntryParams, RawTables
-from flask import request, jsonify
+from flask import jsonify
 
 
-def pdf_parser(file: request.files, rating: float, availability: int, delivery_time: int, data_source: str):
+def pdf_parser(file, rating: float, availability: int, delivery_time: int, data_source: str):
     results = list()
 
     results.append(EntryParams(

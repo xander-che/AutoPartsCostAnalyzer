@@ -1,8 +1,8 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, Blueprint, request, jsonify, render_template
 from utils.validators import allowed_file_type
 from services.parse_pdf import pdf_parser
 
-params = Flask(__name__)
+params = Blueprint('pdf', __name__)
 
 
 @params.route('/')
