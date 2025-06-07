@@ -2,18 +2,27 @@ import os
 import tempfile
 import pdfplumber
 from models.entry_data_model import EntryParams, RawTables
-from flask import jsonify
+from flask import jsonify, request
+from static.messages import ERROR_FILE_TYPE
 
 
-def pdf_parser(file, rating: float, availability: int, delivery_time: int, data_source: str):
+def get_params_dict() -> EntryParams:
+
+    rating = float(request.form.get('rating', 4.0))
+    availability = int(request.form.get('availability', 10))
+    delivery_time = int(request.form.get('delivery_time', 7))
+    data_source = request.form.get('data_source', 'emex.ru')
+
+    return EntryParams(rating=rating,
+                       availability=availability,
+                       delivery_time=delivery_time,
+                       data_source=data_source)
+
+
+def pdf_parser(file):
     results = list()
 
-    results.append(EntryParams(
-        rating=rating,
-        availability=availability,
-        delivery_time=delivery_time,
-        data_source=data_source
-    ))
+    results.append(get_params_dict())
 
     try:
         with tempfile.NamedTemporaryFile(delete=False, prefix='.pdf') as tmp:
@@ -35,5 +44,6 @@ def pdf_parser(file, rating: float, availability: int, delivery_time: int, data_
     except Exception as e:
         if tmp_path in locals() and os.path.exists(tmp_path):
             os.unlink(tmp_path)
-        return jsonify({'error': 'Only PDF files are allowed'}), 500
+        return jsonify({'error': ERROR_FILE_TYPE}), 500
+
 

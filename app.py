@@ -1,5 +1,5 @@
 from flask import Flask
-from controllers.entry_params_controller import params
+from controllers.controller import params
 
 app = Flask(__name__)
 

@@ -1,0 +1,5 @@
+ERROR_NOT_FILE_PART = 'Нет файла'
+ERROR_NO_SELECTED_FILE = 'Файл не выбран'
+ERROR_FILE_TYPE = 'Допустима загрузка только PDF формата. Выберите подходящий файл'
+ERROR_EMPTY_TABLES = 'PDF не содержит таблиц. Обработка не возможна!'
+ERROR_NO_TABLES = 'Неверный формат таблиц PDF. Обработка не возможна!'
