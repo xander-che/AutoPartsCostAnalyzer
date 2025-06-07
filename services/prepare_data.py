@@ -1,7 +1,7 @@
 from typing import Any
 from flask import jsonify, Response
 
-from static.constamts import NUMBERS, BAD_VALUES
+from static.constants import NUMBERS, BAD_VALUES
 from static.messages import ERROR_NO_TABLES
 
 
