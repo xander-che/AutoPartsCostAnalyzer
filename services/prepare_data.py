@@ -26,7 +26,7 @@ def get_target_table(raw_data: dict) -> tuple[Response, int] | list[Any]:
 
     for item in raw_target_table:
         if len(item) == len(header[0]):
-            target_table_data.append(item)
+            target_table_data.append([item[0], item[1], item[2], float(item[3].replace(' ', ''))])
 
     del raw_target_table
 
