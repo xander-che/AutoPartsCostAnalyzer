@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify, render_template
-from services.prepare_data import get_target_table
+from services.prepare_data import get_target_table, get_brand
+from services.web_parser import EMEXParser
+from static.constants import BASE_PVZ
 from static.messages import ERROR_EMPTY_TABLES, ERROR_FILE_TYPE, ERROR_NO_SELECTED_FILE, ERROR_NOT_FILE_PART
 from utils.validators import allowed_file_type
 from services.entry_data_processing import pdf_parser
@@ -35,18 +37,25 @@ def upload_data():
 @params.route('/run_process', methods=['POST'])
 def run_process():
 
-    results = upload_data().get_json()
+    raw_results = upload_data().get_json()
 
-    entry_params = results[0]
-    raw_entry_tables = results[1:]
+    entry_params = raw_results[0]
+    print(__name__, entry_params)
+    raw_entry_tables = raw_results[1:]
 
     if len(raw_entry_tables) == 0:
         return jsonify({'error': ERROR_EMPTY_TABLES}), 400
 
-    print(__name__, entry_params['availability'])
-
     target_table_data = get_target_table(raw_entry_tables)
+    target_brand = get_brand(raw_entry_tables)
 
     print(__name__, target_table_data)
+    print(__name__, target_brand)
 
-    return results
+    emex_parser = EMEXParser(BASE_PVZ, target_brand, target_table_data)
+
+    raw_soup = emex_parser.search_data()
+
+    print(__name__, raw_soup)
+
+    return raw_results

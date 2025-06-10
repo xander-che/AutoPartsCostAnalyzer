@@ -12,11 +12,13 @@ def get_params_dict() -> EntryParams:
     availability = int(request.form.get('availability', 10))
     delivery_time = int(request.form.get('delivery_time', 7))
     data_source = request.form.get('data_source', 'emex.ru')
+    pvz_code = request.form.get('pvz_code', '38140')
 
     return EntryParams(rating=rating,
                        availability=availability,
                        delivery_time=delivery_time,
-                       data_source=data_source)
+                       data_source=data_source,
+                       pvz_code=pvz_code)
 
 
 def pdf_parser(file):
@@ -37,6 +39,7 @@ def pdf_parser(file):
                         page=i+1,
                         table=table
                     ))
+
         os.unlink(tmp_path)
 
         return jsonify(results)

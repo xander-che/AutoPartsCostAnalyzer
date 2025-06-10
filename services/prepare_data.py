@@ -1,7 +1,6 @@
 from typing import Any
 from flask import jsonify, Response
-
-from static.constants import NUMBERS, BAD_VALUES
+from static.constants import NUMBERS, BAD_VALUES, BRAND_DETECT
 from static.messages import ERROR_NO_TABLES
 
 
@@ -31,3 +30,18 @@ def get_target_table(raw_data: dict) -> tuple[Response, int] | list[Any]:
     del raw_target_table
 
     return target_table_data
+
+
+def get_brand(raw_data: dict) -> str:
+    brand = 'FORD' # default brand
+    for items in raw_data:
+        for item in items['table']:
+            split_text = item[0].split(',')
+            for word in split_text:
+                if word.lower() in BRAND_DETECT:
+                    brand = ''.join(item[1].split()).upper()
+                    break
+            break
+        break
+
+    return brand
