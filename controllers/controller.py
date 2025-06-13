@@ -40,22 +40,34 @@ def run_process():
     raw_results = upload_data().get_json()
 
     entry_params = raw_results[0]
-    print(__name__, entry_params)
     raw_entry_tables = raw_results[1:]
 
     if len(raw_entry_tables) == 0:
         return jsonify({'error': ERROR_EMPTY_TABLES}), 400
 
-    target_table_data = get_target_table(raw_entry_tables)
+    entry_table_data = get_target_table(raw_entry_tables)
     target_brand = get_brand(raw_entry_tables)
 
-    print(__name__, target_table_data)
+    print(__name__, entry_table_data)
+    tmp_list = list()
+    not_found_list = list()
     print(__name__, target_brand)
 
-    emex_parser = EMEXParser(BASE_PVZ, target_brand, target_table_data)
+    emex_parser = EMEXParser(entry_params, BASE_PVZ, target_brand, entry_table_data)
+    result = emex_parser.search_data()
+    print(__name__, result)
 
-    raw_soup = emex_parser.search_data()
+    price_total = 0
+    not_found = 0
+    for item in result:
+        price_total += item.price
+        tmp_list.append(item.key_number)
+    for item in entry_table_data:
+        if item[1] not in tmp_list:
+            not_found += 1
+            not_found_list.append(item[1])
+    print(__name__, not_found_list)
+    print(__name__, price_total)
+    print(__name__, not_found)
 
-    print(__name__, raw_soup)
-
-    return raw_results
+    return jsonify(result).get_json()

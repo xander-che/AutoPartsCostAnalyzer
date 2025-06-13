@@ -27,3 +27,22 @@ class RawTables:
         return {'tables': [{'page': self.page,
                             'table': self.table}]
         }
+
+
+@dataclass
+class ItemDict:
+
+    @staticmethod
+    def get_dict():
+        return {
+                'key_number': list(),
+                'detail_num': list(),
+                'detail_name': list(),
+                'delivery_time': list(),
+                'price': list(),
+                'min_qty': list(),
+                'max_qty': list(),
+                'make_name': list(),
+                'link': list(),
+                'rating': list()
+            }

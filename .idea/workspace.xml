@@ -4,14 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9399810-7a16-477e-ba39-90b33dac81aa" name="Changes" comment="refactoring">
-      <change afterPath="$PROJECT_DIR$/services/web_parser.py" afterDir="false" />
+    <list default="true" id="d9399810-7a16-477e-ba39-90b33dac81aa" name="Changes" comment="parser init">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/controller.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/entry_data_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/entry_data_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/entry_data_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/entry_data_processing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/prepare_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/prepare_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/web_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/web_parser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/static/constants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/upload.html" afterDir="false" />
     </list>
@@ -51,22 +50,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.app.executor": "Run",
-    "Python.controller.executor": "Run",
-    "Python.dev.executor": "Run",
-    "Python.entry_params_controller.executor": "Run",
-    "Python.web_parser.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.app.executor&quot;: &quot;Run&quot;,
+    &quot;Python.controller.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dev.executor&quot;: &quot;Run&quot;,
+    &quot;Python.entry_params_controller.executor&quot;: &quot;Run&quot;,
+    &quot;Python.web_parser.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ACHER\PycharmProjects\AutoPartsCostAnalyzer" />
@@ -191,7 +190,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749369023493</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="parser init">
+      <option name="closed" value="true" />
+      <created>1749580565565</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1749580565565</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -215,6 +222,7 @@
     <MESSAGE value="formatted" />
     <MESSAGE value="new items and refactoring" />
     <MESSAGE value="refactoring" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactoring" />
+    <MESSAGE value="parser init" />
+    <option name="LAST_COMMIT_MESSAGE" value="parser init" />
   </component>
 </project>

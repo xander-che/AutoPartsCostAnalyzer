@@ -39,7 +39,7 @@ def get_brand(raw_data: dict) -> str:
             split_text = item[0].split(',')
             for word in split_text:
                 if word.lower() in BRAND_DETECT:
-                    brand = ''.join(item[1].split()).upper()
+                    brand = ''.join(item[1].replace(' ', '%20')).upper()
                     break
             break
         break
