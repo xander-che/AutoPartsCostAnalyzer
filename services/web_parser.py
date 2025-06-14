@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 from flask import jsonify
-from models.entry_data_model import ItemDict
+from models.data_models import ItemDict
 from static.constants import EMEX_BASE_URL, BASE_PVZ, TARGET_JSON_KEYS
 import pandas as pd
 
@@ -29,12 +29,21 @@ class EMEXParser:
         session = requests.Session()
 
         for item in self.data:
+            if item[1] == '791104Y000' or item[1] == '791204Y000':
+                print(__name__, item)
             url = f'{EMEX_BASE_URL}/{item[1]}/{self.brand}/{self.pvz}'
+
+            session.cookies.clear_session_cookies()
             response = session.get(url, headers=header)
+
             soup = BeautifulSoup(response.text, 'html.parser')
+
             raw_data = json.loads(soup.find(id='__NEXT_DATA__').prettify()[51:-10])
             result_table.append(self.__parse_data(raw_data, item[1]))
 
+            response.close()
+
+        session.close()
 
         return self.__analyzing(self.entry_params, result_table)
 
@@ -70,7 +79,7 @@ class EMEXParser:
                                                     'max_qty': int(max_qty),
                                                     'make_name': make_name,
                                                     'link': f'{EMEX_BASE_URL}/{detail_num}/{make_name}/{BASE_PVZ}'.replace(' ', '%20')}
-                                    if key3 == 'rating':
+                                    if key3 == 'rating' and len(item) > 0:
                                         item['rating'] = value3
                                     if len(item) == 10:
                                         result_table.append([item])
@@ -101,13 +110,19 @@ class EMEXParser:
                 item_dict['rating'].append(item[0]['rating'])
 
             df = pd.DataFrame(item_dict).sort_values(by='price')
+            print(__name__, entry_params)
 
             for row in df.itertuples():
                 if row.delivery_time <= entry_params['delivery_time'] and \
                     row.max_qty >= entry_params['availability'] and \
                         row.rating >= entry_params['rating']:
-                            result.append(row)
-                            break
+                    if entry_params['strict_compliance'] == 'on':
+                            if row.key_number == row.detail_num:
+                                result.append(row)
+                                break
+                    else:
+                        result.append(row)
+                        break
 
         return result
 

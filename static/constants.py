@@ -1,6 +1,8 @@
-NUMBERS = [str(i) for i in range(200)]
-BAD_VALUES = ['БН', 'БН'.lower(), 'Б/Н', 'Б/Н'.lower(), 'Б.Н.', 'Б.Н.'.lower(), '', '-', '—']
+NUMBERS = [str(i) for i in range(500)]
+BAD_VALUES = ['БН', 'БН'.lower(), 'Б/Н', 'Б/Н'.lower(), 'Б.Н.', 'Б.Н.'.lower(), '', '-', '—', ' ']
 EMEX_BASE_URL = 'https://emex.ru/products'
 BASE_PVZ = '38140'
 BRAND_DETECT = ['марка', 'модель']
 TARGET_JSON_KEYS = ['originals', 'analogs']
+FOUND_TABLE_HEADER = ['Номер', 'Наименование', 'Производитель', 'Рейтинг', 'Срок доставки (дн.)', 'Цена (руб.)', 'Кол-во', 'Сумма (руб.)', 'на EMEX.RU']
+NOT_FOUND_TABLE_HEADER = ['Кат. номер', 'Наименование', 'Цена, руб.', 'Кол-во', 'Сумма, руб.']

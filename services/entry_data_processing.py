@@ -1,7 +1,7 @@
 import os
 import tempfile
 import pdfplumber
-from models.entry_data_model import EntryParams, RawTables
+from models.data_models import EntryParams, RawTables
 from flask import jsonify, request
 from static.messages import ERROR_FILE_TYPE
 
@@ -13,12 +13,14 @@ def get_params_dict() -> EntryParams:
     delivery_time = int(request.form.get('delivery_time', 7))
     data_source = request.form.get('data_source', 'emex.ru')
     pvz_code = request.form.get('pvz_code', '38140')
+    strict_compliance = request.form.get('strict_match', 'off')
 
     return EntryParams(rating=rating,
                        availability=availability,
                        delivery_time=delivery_time,
                        data_source=data_source,
-                       pvz_code=pvz_code)
+                       pvz_code=pvz_code,
+                       strict_compliance=strict_compliance)
 
 
 def pdf_parser(file):

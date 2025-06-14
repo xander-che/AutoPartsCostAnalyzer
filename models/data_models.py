@@ -8,13 +8,15 @@ class EntryParams:
     delivery_time: int
     data_source: str
     pvz_code: str
+    strict_compliance: str
 
     def params_to_dict(self):
         return {'params': [{'rating': self.rating,
                             'availability': self.availability,
                             'delivery_time': self.delivery_time,
                             'data_source': self.data_source,
-                            'pvz_code': self.pvz_code}]
+                            'pvz_code': self.pvz_code,
+                            'strict_compliance': self.strict_compliance}]
         }
 
 
@@ -46,3 +48,36 @@ class ItemDict:
                 'link': list(),
                 'rating': list()
             }
+
+
+@dataclass
+class OutTables:
+    found_header: list
+    found_rows: list
+    found_total_sum: int
+    not_found_header: list
+    not_found_rows: list
+    not_found_total_sum: int
+    initial_sum: int
+    final_sum: int
+    percentage: str
+
+    def get_out_tables(self):
+        return {
+            'found': {
+                'headers': self.found_header,
+                'rows': self.found_rows,
+                'total_sum': str(self.found_total_sum)
+            },
+            'not_found': {
+                'headers': self.not_found_header,
+                'rows': self.not_found_rows,
+                'total_sum': str(self.not_found_total_sum)
+            },
+            'total_comparison': {
+                'initial_sum': str(self.initial_sum),
+                'final_sum': str(self.final_sum),
+                'percentage': self.percentage
+            }
+
+        }

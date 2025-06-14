@@ -24,7 +24,7 @@
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
             width: 90%;
-            max-width: 800px;
+            max-width: 1200px;
         }
 
         h1 {
@@ -38,9 +38,52 @@
             margin-bottom: 25px;
         }
 
-        .form-group {
+        .form-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
             margin-bottom: 20px;
-            text-align: left;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+         .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .file-input-group {
+            margin-bottom: 20px;
+            text-align: center; /* Центрируем текст и кнопку */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Центрируем дочерние элементы по горизонтали */
+        }
+
+        .file-input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        .file-input-group input[type="file"] {
+            padding: 10px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .file-input-group input[type="file"]:hover {
+            background: #45a049;
         }
 
         label {
@@ -52,11 +95,28 @@
 
         select, input[type="file"] {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            box-sizing: border-box;
+            padding: 8px 10px;
+            font-size: 14px;
+        }
+
+        #submitBtn {
+            margin-top: 10px;
+            width: auto;
+            padding: 10px 30px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Адаптивность для маленьких экранов */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+
+            .form-group {
+                min-width: 100%;
+            }
         }
 
         button {
@@ -128,6 +188,136 @@
             font-weight: bold;
             text-align: center;
         }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .data-table th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .data-table tr:hover {
+            background-color: #e9e9e9;
+        }
+
+        .table-wrapper {
+            margin-bottom: 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .table-wrapper h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .no-data {
+            color: #666;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .error {
+            color: #e74c3c;
+            padding: 15px;
+            background: #fdecea;
+            border-radius: 5px;
+        }
+
+        .data-table a {
+            color: #0066cc;
+            font-size: 14px;
+            text-decoration: underline;
+        }
+
+        .data-table a:hover {
+            color: #004499;
+            text-decoration: none;
+        }
+
+        .sum-row {
+            padding: 12px 15px;
+            margin: -10px 0 20px 0;
+            background-color: #f8f9fa;
+            border-radius: 0 0 5px 5px;
+            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-weight: normal; /* Основной текст не жирный */
+        }
+
+        .not-found-table th {
+            background-color: #e67e22; /* Оранжевый вместо красного для лучшего контраста */
+            color: white;
+        }
+
+        .found-sum {
+            border-left: 4px solid #4CAF50;
+            color: #2c3e50;
+        }
+
+        .not-found-sum {
+            border-left: 4px solid #e67e22;
+            color: #2c3e50;
+        }
+
+        .sum-value {
+            font-weight: bold; /* Только сумма жирная */
+            margin-left: 5px;
+        }
+
+        .total-result {
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #f1f8fe;
+            border-left: 4px solid #2196F3;
+            border-radius: 4px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .total-result .percentage {
+            color: #e74c3c; /* Красный для отрицательных значений */
+            font-weight: bold;
+        }
+
+        .total-result .positive {
+            color: #4CAF50; /* Зеленый для положительных значений */
+        }
+
+        /* Стилизация чекбокса (если нужно) */
+        .form-group input[type="checkbox"] {
+            width: auto; /* Убираем 100% ширину */
+            margin: 0; /* Убираем стандартные отступы */
+            cursor: pointer;
+        }
+
+        /* Чтобы label не переносился на новую строку */
+        .form-group label {
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -136,64 +326,69 @@
         <h3>Укажите параметры для поиска и загрузите файл</h3>
 
         <form method="post" enctype="multipart/form-data" action="/upload" id="uploadForm">
-            <div class="form-group">
-                <label for="data_source">Источник данных:</label>
-                <select id="data_source" name="data_source" required>
-                    <option value="emex.ru" selected>emex.ru</option>
-                </select>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="data_source">Источник данных:</label>
+                    <select id="data_source" name="data_source" required>
+                        <option value="emex.ru" selected>emex.ru</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="pvz_code">Код ПВЗ:</label>
+                    <select id="pvz_code" name="pvz_code" required>
+                        <option value="38140" selected>38140</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="rating">Рейтинг поставщика:</label>
+                    <select id="rating" name="rating" required>
+                        <option value="" disabled selected>Выберите рейтинг</option>
+                        <script>
+                            for (let i = 30; i <= 50; i++) {
+                                const value = (i / 10).toFixed(1);
+                                document.write(`<option value="${value}">${value}</option>`);
+                            }
+                        </script>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="availability">Наличие на складе:</label>
+                    <select id="availability" name="availability" required>
+                        <option value="" disabled selected>Выберите количество</option>
+                        <script>
+                            for (let i = 2; i <= 20; i++) {
+                                document.write(`<option value="${i}">${i}</option>`);
+                            }
+                        </script>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="delivery_time">Срок доставки:</label>
+                    <select id="delivery_time" name="delivery_time" required>
+                        <option value="" disabled selected>Выберите срок</option>
+                        <script>
+                            for (let i = 1; i <= 30; i++) {
+                                document.write(`<option value="${i}">${i}</option>`);
+                            }
+                        </script>
+                    </select>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="pvz_code">Код ПВЗ (уточняйте на emex.ru):</label>
-                <select id="pvz_code" name="pvz_code" required>
-                    <option value="38140" selected>38140</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="rating">Минимальный рейтинг поставщика:</label>
-                <select id="rating" name="rating" required>
-                    <option value="" disabled selected>Выберите рейтинг</option>
-                    <!-- Генерация значений от 3.5 до 5 с шагом 0.1 -->
-                    <script>
-                        for (let i = 30; i <= 50; i++) {
-                            const value = (i / 10).toFixed(1);
-                            document.write(`<option value="${value}">${value}</option>`);
-                        }
-                    </script>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="availability">Минимальное наличие на складе:</label>
-                <select id="availability" name="availability" required>
-                    <option value="" disabled selected>Выберите количество</option>
-                    <!-- Генерация значений от 5 до 20 -->
-                    <script>
-                        for (let i = 2; i <= 20; i++) {
-                            document.write(`<option value="${i}">${i}</option>`);
-                        }
-                    </script>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="delivery_time">Максимальный срок доставки (дней):</label>
-                <select id="delivery_time" name="delivery_time" required>
-                    <option value="" disabled selected>Выберите срок</option>
-                    <!-- Генерация значений от 1 до 30 -->
-                    <script>
-                        for (let i = 1; i <= 30; i++) {
-                            document.write(`<option value="${i}">${i}</option>`);
-                        }
-                    </script>
-                </select>
-            </div>
-
-
-            <div class="form-group">
-                <label for="file">PDF файл с запчастями:</label>
+            <div class="file-input-group">
+                <label for="file">PDF файл:</label>
                 <input type="file" id="file" name="file" accept=".pdf" required>
+            </div>
+
+            <div class="form-group">
+                <label for="strict_match" style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="strict_match" name="strict_match">
+                    Строгое соответствие по номерам
+                </label>
             </div>
 
             <button type="submit" id="submitBtn">Найти запчасти</button>
@@ -211,6 +406,7 @@
 
             submitBtn.disabled = true;
 
+            // Показываем индикатор загрузки
             resultDiv.innerHTML = `
                 <div class="loader-container">
                     <div class="loader"></div>
@@ -225,16 +421,130 @@
                 });
 
                 const result = await response.json();
-                resultDiv.innerHTML =
-                    `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+
+                // Очищаем предыдущие результаты
+                resultDiv.innerHTML = '';
+
+                if (result.found || result.not_found) {
+                // Таблица с найденными запчастями
+                    if (result.found && result.found.rows.length > 0) {
+                        createTable(resultDiv, result.found, 'Найдено на EMEX.RU по заданным параметрам', 'found-table', 'table-title-found');
+
+                        // Добавляем строку с суммой
+                        if (result.found.total_sum) {
+                            const sumDiv = document.createElement('div');
+                            sumDiv.className = 'sum-row found-sum';
+                            sumDiv.innerHTML = `Общая стоимость найденных запчастей: <span class="sum-value">${result.found.total_sum.toLocaleString('ru-RU')} руб.</span>`;
+                            resultDiv.appendChild(sumDiv);
+                        }
+                    }
+
+                    // Таблица с ненайденными запчастями
+                    if (result.not_found && result.not_found.rows.length > 0) {
+                        createTable(resultDiv, result.not_found, 'Не найдено на EMEX.RU по заданным параметрам', 'not-found-table', 'table-title-not-found');
+
+                        // Добавляем строку с суммой
+                        if (result.not_found.total_sum) {
+                            const sumDiv = document.createElement('div');
+                            sumDiv.className = 'sum-row not-found-sum';
+                            sumDiv.innerHTML = `Общая стоимость ненайденных запчастей: <span class="sum-value">${result.not_found.total_sum.toLocaleString('ru-RU')} руб.</span>`;
+                            resultDiv.appendChild(sumDiv);
+                        }
+                    }
+                    if (result.total_comparison) {
+                        const totalDiv = document.createElement('div');
+                        totalDiv.className = 'total-result';
+
+                        // Определяем класс для процентов (положительный/отрицательный)
+                        const percentClass = result.total_comparison.percentage < 0 ? 'percentage' : 'percentage positive';
+
+                        totalDiv.innerHTML = `
+                            Общий результат: ${result.total_comparison.final_sum.toLocaleString('ru-RU')} руб.
+                            (<span class="${percentClass}">${result.total_comparison.percentage > 0 ? '+' : ''}${result.total_comparison.percentage}%</span>)
+                        `;
+                        resultDiv.appendChild(totalDiv);
+                    }
+                } else {
+                    resultDiv.innerHTML = '<p class="no-data">Данные не найдены</p>';
+                }
 
             } catch (error) {
-                resultDiv.innerHTML =
-                    `<p class="error">Ошибка: ${error.message}</p>`;
+                resultDiv.innerHTML = `<p class="error">Ошибка: ${error.message}</p>`;
             } finally {
                 submitBtn.disabled = false;
             }
         });
+
+        // Функция для создания таблицы
+        function createTable(container, tableData, title, tableClass, titleClass) {
+            const tableWrapper = document.createElement('div');
+            tableWrapper.className = 'table-wrapper';
+
+            // Добавляем заголовок таблицы
+            const tableTitle = document.createElement('h3');
+            tableTitle.textContent = title;
+            tableTitle.className = titleClass;
+            tableWrapper.appendChild(tableTitle);
+
+            // Создаем HTML-таблицу
+            const htmlTable = document.createElement('table');
+            htmlTable.className = `data-table ${tableClass}`;
+
+            // Создаем заголовки таблицы
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+
+            tableData.headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+
+            thead.appendChild(headerRow);
+            htmlTable.appendChild(thead);
+
+            // Создаем тело таблицы
+            const tbody = document.createElement('tbody');
+
+            tableData.rows.forEach(row => {
+                const tr = document.createElement('tr');
+
+                row.forEach((cell, cellIndex) => {
+                    const td = document.createElement('td');
+
+                    // Если ячейка - объект с ссылкой
+                    if (typeof cell === 'object' && cell.url) {
+                        const link = document.createElement('a');
+                        link.href = cell.url;
+                        link.textContent = cell.text || "Ссылка";
+                        link.target = "_blank";
+                        link.style.color = "#0066cc";
+                        link.style.textDecoration = "underline";
+                        td.appendChild(link);
+                    }
+                    // Если ячейка - строка с URL
+                    else if (typeof cell === 'string' && cell.startsWith('http')) {
+                        const link = document.createElement('a');
+                        link.href = cell;
+                        link.textContent = "Ссылка";
+                        link.target = "_blank";
+                        td.appendChild(link);
+                    }
+                    // Обычная ячейка
+                    else {
+                        td.textContent = cell;
+                    }
+
+                    tr.appendChild(td);
+                });
+
+                tbody.appendChild(tr);
+            });
+
+            htmlTable.appendChild(tbody);
+            tableWrapper.appendChild(htmlTable);
+            container.appendChild(tableWrapper);
+        }
     </script>
 </body>
 </html>
