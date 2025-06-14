@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from flask import jsonify
 from models.data_models import ItemDict
 from static.constants import EMEX_BASE_URL, BASE_PVZ, TARGET_JSON_KEYS
+from utils.validators import get_my_ip, get_proxy_ip
 
 
 class EMEXParser:
@@ -35,25 +36,34 @@ class EMEXParser:
             status_forcelist=[500, 502, 503, 504]
         )
 
-        session = requests.Session()
-        session.mount("https://", HTTPAdapter(max_retries=retries))
+        proxies = {
+            "https": "http://185.10.129.14:3128" # Прокси с https://hixxxx.name/proxy-list/?country=BYFRPLRUCH&type=s#list
+        }
 
-        try:
-            for item in self.data:
-                url = f'{EMEX_BASE_URL}/{item[1]}/{self.brand}/{self.pvz}'
+        my_ip = get_my_ip()
+        proxy_ip = get_proxy_ip(proxies)
 
-                response = session.get(url, headers=header, timeout=10)
+        if len(my_ip) > 0 and len(proxy_ip) > 0:
+            if my_ip != proxy_ip:
+                session = requests.Session()
+                session.mount("https://", HTTPAdapter(max_retries=retries))
 
-                soup = BeautifulSoup(response.text, 'html.parser')
+                try:
+                    for item in self.data:
+                        url = f'{EMEX_BASE_URL}/{item[1]}/{self.brand}/{self.pvz}'
 
-                raw_data = json.loads(soup.find(id='__NEXT_DATA__').prettify()[51:-10])
-                result_table.append(self.__parse_data(raw_data, item[1]))
-                sleep(1)
+                        response = session.get(url, headers=header, proxies=proxies, timeout=10)
 
-        except Exception as e:
-            print(f"Ошибка соединения: {e}")
+                        soup = BeautifulSoup(response.text, 'html.parser')
 
-        session.close()
+                        raw_data = json.loads(soup.find(id='__NEXT_DATA__').prettify()[51:-10])
+                        result_table.append(self.__parse_data(raw_data, item[1]))
+                        sleep(1)
+
+                except Exception as e:
+                    print(f"Ошибка соединения: {e}")
+
+                session.close()
 
         return self.__analyzing(self.entry_params, result_table)
 
@@ -120,7 +130,7 @@ class EMEXParser:
                 item_dict['rating'].append(item[0]['rating'])
 
             df = pd.DataFrame(item_dict).sort_values(by='price')
-            print(__name__, entry_params)
+            # print(__name__, entry_params)
 
             for row in df.itertuples():
                 if row.delivery_time <= entry_params['delivery_time'] and \
