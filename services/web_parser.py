@@ -1,10 +1,12 @@
-from bs4 import BeautifulSoup
-import requests
 import json
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
 from flask import jsonify
 from models.data_models import ItemDict
 from static.constants import EMEX_BASE_URL, BASE_PVZ, TARGET_JSON_KEYS
-import pandas as pd
 
 
 class EMEXParser:
@@ -26,22 +28,28 @@ class EMEXParser:
             "Origin": "https://emex.ru"
         }
 
+        retries = Retry(
+            total=3,
+            backoff_factor=1,
+            status_forcelist=[500, 502, 503, 504]
+        )
+
         session = requests.Session()
+        session.mount("https://", HTTPAdapter(max_retries=retries))
 
-        for item in self.data:
-            if item[1] == '791104Y000' or item[1] == '791204Y000':
-                print(__name__, item)
-            url = f'{EMEX_BASE_URL}/{item[1]}/{self.brand}/{self.pvz}'
+        try:
+            for item in self.data:
+                url = f'{EMEX_BASE_URL}/{item[1]}/{self.brand}/{self.pvz}'
 
-            session.cookies.clear_session_cookies()
-            response = session.get(url, headers=header)
+                response = session.get(url, headers=header, timeout=10)
 
-            soup = BeautifulSoup(response.text, 'html.parser')
+                soup = BeautifulSoup(response.text, 'html.parser')
 
-            raw_data = json.loads(soup.find(id='__NEXT_DATA__').prettify()[51:-10])
-            result_table.append(self.__parse_data(raw_data, item[1]))
+                raw_data = json.loads(soup.find(id='__NEXT_DATA__').prettify()[51:-10])
+                result_table.append(self.__parse_data(raw_data, item[1]))
 
-            response.close()
+        except Exception as e:
+            print(f"Ошибка соединения: {e}")
 
         session.close()
 
