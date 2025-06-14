@@ -1,4 +1,5 @@
 import json
+import random
 from time import sleep
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -58,7 +59,7 @@ class EMEXParser:
 
                         raw_data = json.loads(soup.find(id='__NEXT_DATA__').prettify()[51:-10])
                         result_table.append(self.__parse_data(raw_data, item[1]))
-                        sleep(1)
+                        sleep(random.choice([1, 2, 3]))
 
                 except Exception as e:
                     print(f"Ошибка соединения: {e}")
