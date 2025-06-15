@@ -7,3 +7,5 @@ BRAND_DETECT = ['марка', 'модель']
 TARGET_JSON_KEYS = ['originals', 'analogs']
 FOUND_TABLE_HEADER = ['Номер', 'Наименование', 'Производитель', 'Рейтинг', 'Срок доставки (дн.)', 'Цена (руб.)', 'Кол-во', 'Сумма (руб.)', 'на EMEX.RU']
 NOT_FOUND_TABLE_HEADER = ['Кат. номер', 'Наименование', 'Цена, руб.', 'Кол-во', 'Сумма, руб.']
+PROXY_USER = "P1vZXL"
+PROXY_PASS = "IkL18ZoERM"

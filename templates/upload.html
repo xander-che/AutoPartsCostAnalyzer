@@ -318,6 +318,63 @@
         .form-group label {
             white-space: nowrap;
         }
+
+        /* Стили для полей прокси */
+        .proxy-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            gap: 15px;
+        }
+
+        .proxy-fields {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .proxy-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .proxy-field label {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .proxy-field input {
+            padding: 6px 8px;
+            font-size: 12px;
+            width: 120px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .proxy-field input#proxy_port {
+            width: 70px;
+        }
+
+        /* Стили для ссылки */
+        .proxy-link-container {
+            text-align: right;
+            width: 100%;
+            margin-top: 3px;
+        }
+
+        .proxy-link {
+            font-size: 11px;
+            color: #666;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .proxy-link:hover {
+            color: #4CAF50;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -384,11 +441,43 @@
                 <input type="file" id="file" name="file" accept=".pdf" required>
             </div>
 
-            <div class="form-group">
-                <label for="strict_match" style="display: flex; align-items: center; gap: 8px;">
-                    <input type="checkbox" id="strict_match" name="strict_match">
-                    Строгое соответствие по номерам
-                </label>
+<!--            <div class="form-group">-->
+<!--                <label for="strict_match" style="display: flex; align-items: center; gap: 8px;">-->
+<!--                    <input type="checkbox" id="strict_match" name="strict_match">-->
+<!--                    Строгое соответствие по номерам-->
+<!--                </label>-->
+<!--            </div>-->
+
+            <div class="form-row proxy-container">
+                <!-- Чекбокс слева -->
+                <div class="form-group">
+                    <label for="strict_match" style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="strict_match" name="strict_match">
+                        Строгое соответствие по номерам
+                    </label>
+                </div>
+
+                <!-- Поля прокси справа -->
+                <div class="proxy-fields">
+                    <div class="proxy-field">
+                        <label for="proxy_ip">IP адрес прокси:</label>
+                        <input type="text" id="proxy_ip" name="proxy_ip" placeholder="192.168.1.1">
+                    </div>
+
+                    <div class="proxy-field">
+                        <label for="proxy_port">Порт:</label>
+                        <input type="text" id="proxy_port" name="proxy_port" placeholder="8080">
+                    </div>
+                </div>
+            </div>
+
+            <div class="proxy-link-container">
+                <a href="https://hixxxx.name/proxy-list/?country=ARAMAUATBDBYBOBRBGKHCACLCOCRCYCZEEFIFRDEGRHKINIDIRITJPJOKZKRLTLUMXNLNZPHPLRORUSCSGZAESSECHTZTTTNTRUAAEGBUSVN&type=s&anon=4#list"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="proxy-link">
+                   Список доступных прокси-серверов
+                </a>
             </div>
 
             <button type="submit" id="submitBtn">Найти запчасти</button>
@@ -465,7 +554,9 @@
                         resultDiv.appendChild(totalDiv);
                     }
                 } else {
-                    resultDiv.innerHTML = '<p class="no-data">Данные не найдены</p>';
+                    // console.log("Ответ сервера:", result); // Для отладки
+                    const errorMsg = result.error || 'Данные не найдены';
+                    resultDiv.innerHTML = `<p class="no-data">Сообщение: ${errorMsg}</p>`;
                 }
 
             } catch (error) {

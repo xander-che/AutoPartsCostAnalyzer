@@ -1,14 +1,13 @@
 import json
 import random
 from time import sleep
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from flask import jsonify
 from models.data_models import ItemDict
-from static.constants import EMEX_BASE_URL, BASE_PVZ, TARGET_JSON_KEYS
+from static.constants import EMEX_BASE_URL, BASE_PVZ, TARGET_JSON_KEYS, PROXY_USER, PROXY_PASS
+from static.messages import ERROR_NOT_PROXY_ENABLED
 from utils.validators import get_my_ip, get_proxy_ip
 
 
@@ -31,40 +30,44 @@ class EMEXParser:
             "Origin": "https://emex.ru"
         }
 
-        retries = Retry(
-            total=3,
-            backoff_factor=1,
-            status_forcelist=[500, 502, 503, 504]
-        )
+
+        proxy_ip = self.entry_params['proxy_ip']
+        proxy_port = self.entry_params['proxy_port']
 
         proxies = {
-            "https": "http://185.10.129.14:3128" # Прокси с https://hixxxx.name/proxy-list/?country=BYFRPLRUCH&type=s#list
+            'http': f'http://{PROXY_USER}:{PROXY_PASS}@{proxy_ip}:{proxy_port}',
+            'https': f'http://{PROXY_USER}:{PROXY_PASS}@{proxy_ip}:{proxy_port}'# http://185.10.129.14:3128
         }
+        print(__name__, proxies)
 
         my_ip = get_my_ip()
         proxy_ip = get_proxy_ip(proxies)
 
-        if len(my_ip) > 0 and len(proxy_ip) > 0:
-            if my_ip != proxy_ip:
-                session = requests.Session()
-                session.mount("https://", HTTPAdapter(max_retries=retries))
+        if len(my_ip) > 0 and len(proxy_ip) > 0 and my_ip != proxy_ip:
 
-                try:
-                    for item in self.data:
-                        url = f'{EMEX_BASE_URL}/{item[1]}/{self.brand}/{self.pvz}'
+            session = requests.Session()
 
-                        response = session.get(url, headers=header, proxies=proxies, timeout=10)
+            try:
+                for item in self.data:
+                    url = f'{EMEX_BASE_URL}/{item[1]}/{self.brand}/{self.pvz}'
 
-                        soup = BeautifulSoup(response.text, 'html.parser')
+                    response = session.get(url, headers=header, proxies=proxies, timeout=10)
 
-                        raw_data = json.loads(soup.find(id='__NEXT_DATA__').prettify()[51:-10])
-                        result_table.append(self.__parse_data(raw_data, item[1]))
-                        sleep(random.choice([1, 2, 3]))
+                    soup = BeautifulSoup(response.text, 'html.parser')
 
-                except Exception as e:
-                    print(f"Ошибка соединения: {e}")
+                    raw_data = json.loads(soup.find(id='__NEXT_DATA__').prettify()[51:-10])
+                    result_table.append(self.__parse_data(raw_data, item[1]))
+                    sleep(random.choice([1, 2, 3]))
 
+            except Exception as e:
+                print(f"Ошибка соединения: {e}")
                 session.close()
+                return result_table
+
+            session.close()
+        else:
+            result_table.append(ERROR_NOT_PROXY_ENABLED)
+            return result_table
 
         return self.__analyzing(self.entry_params, result_table)
 
@@ -131,7 +134,6 @@ class EMEXParser:
                 item_dict['rating'].append(item[0]['rating'])
 
             df = pd.DataFrame(item_dict).sort_values(by='price')
-            # print(__name__, entry_params)
 
             for row in df.itertuples():
                 if row.delivery_time <= entry_params['delivery_time'] and \

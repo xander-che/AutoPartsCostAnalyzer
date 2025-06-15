@@ -4,8 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9399810-7a16-477e-ba39-90b33dac81aa" name="Changes" comment="proxy add">
+    <list default="true" id="d9399810-7a16-477e-ba39-90b33dac81aa" name="Changes" comment="refactoring">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/data_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/data_models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/entry_data_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/entry_data_processing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/web_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/web_parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/static/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/messages.py" beforeDir="false" afterPath="$PROJECT_DIR$/static/messages.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/upload.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/validators.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/validators.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +61,7 @@
     &quot;Python.dev.executor&quot;: &quot;Run&quot;,
     &quot;Python.entry_params_controller.executor&quot;: &quot;Run&quot;,
     &quot;Python.prepare_data.executor&quot;: &quot;Run&quot;,
-    &quot;Python.web_parser.executor&quot;: &quot;Run&quot;,
+    &quot;Python.web_parser.executor&quot;: &quot;Debug&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
@@ -256,7 +264,23 @@
       <option name="project" value="LOCAL" />
       <updated>1749931046080</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="random sleep">
+      <option name="closed" value="true" />
+      <created>1749931354336</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1749931354336</updated>
+    </task>
+    <task id="LOCAL-00024" summary="refactoring">
+      <option name="closed" value="true" />
+      <created>1749931590271</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1749931590271</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -279,12 +303,13 @@
     <MESSAGE value="bug fix" />
     <MESSAGE value="formatted" />
     <MESSAGE value="new items and refactoring" />
-    <MESSAGE value="refactoring" />
     <MESSAGE value="parser init" />
     <MESSAGE value="raw result" />
     <MESSAGE value="first prototype" />
     <MESSAGE value="parser update" />
     <MESSAGE value="proxy add" />
-    <option name="LAST_COMMIT_MESSAGE" value="proxy add" />
+    <MESSAGE value="random sleep" />
+    <MESSAGE value="refactoring" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactoring" />
   </component>
 </project>

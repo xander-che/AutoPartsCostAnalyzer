@@ -9,6 +9,8 @@ class EntryParams:
     data_source: str
     pvz_code: str
     strict_compliance: str
+    proxy_ip: str
+    proxy_port: str
 
     def params_to_dict(self):
         return {'params': [{'rating': self.rating,
@@ -16,7 +18,9 @@ class EntryParams:
                             'delivery_time': self.delivery_time,
                             'data_source': self.data_source,
                             'pvz_code': self.pvz_code,
-                            'strict_compliance': self.strict_compliance}]
+                            'strict_compliance': self.strict_compliance,
+                            'proxy_ip': self.proxy_ip,
+                            'proxy_port': self.proxy_port}]
         }
 
 
