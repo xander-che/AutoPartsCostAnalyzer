@@ -43,6 +43,7 @@ def run_process():
     entry_params = raw_results[0]
     print(__name__, entry_params)
     raw_entry_tables = raw_results[1:]
+    print(__name__, raw_entry_tables)
 
     if len(raw_entry_tables) == 0:
         return jsonify({'error': ERROR_EMPTY_TABLES}), 400
@@ -58,8 +59,9 @@ def run_process():
     emex_parser = EMEXParser(entry_params, BASE_PVZ, target_brand, entry_table_data)
     result = emex_parser.search_data()
 
-    if result[0] == ERROR_NOT_PROXY_ENABLED:
-        return jsonify({'error': ERROR_NOT_PROXY_ENABLED}), 305
+    if len(result) == 1:
+        if result[0] == ERROR_NOT_PROXY_ENABLED:
+            return jsonify({'error': ERROR_NOT_PROXY_ENABLED}), 305
     elif len(result) == 0:
         return jsonify({'error': NO_DATA_FOUND}), 200
 

@@ -1,8 +1,7 @@
 from typing import Any
 from flask import jsonify, Response
-
 from models.data_models import OutTables
-from static.constants import NUMBERS, BAD_VALUES, BRAND_DETECT
+from static.constants import NUMBERS, BAD_VALUES, BRAND_DETECT, TERGET_HEADER
 from static.messages import ERROR_NO_TABLES
 from utils.validators import get_entry_qty
 
@@ -17,13 +16,14 @@ def get_tables_data(raw_data: dict) -> tuple[Response, int] | tuple[list[Any], l
 
     for items in raw_data:
         for item in items['table']:
-            if item[0] in NUMBERS:
-                raw_key_list.append(item[1])
-                entry_table_data.append(item)
-                if item[1] not in BAD_VALUES:
-                    if len(entry_header) == 0:
-                        entry_header.append(items['table'][0])
-                    raw_target_table.append(item)
+            if items['table'][0] == TERGET_HEADER:
+                if item[0] in NUMBERS:
+                    raw_key_list.append(item[1])
+                    entry_table_data.append(item)
+                    if item[1] not in BAD_VALUES:
+                        if len(entry_header) == 0:
+                            entry_header.append(items['table'][0])
+                        raw_target_table.append(item)
 
     print(__name__ , entry_header)
     # print(__name__, raw_key_list)
@@ -33,7 +33,12 @@ def get_tables_data(raw_data: dict) -> tuple[Response, int] | tuple[list[Any], l
 
     for item in raw_target_table:
         if len(item) == len(entry_header[0]):
-            target_table_data.append([item[0], item[1], item[2], float(item[3].replace(' ', '')), int(item[5])])
+            try:
+                target_table_data.append([item[0], item[1], item[2], float(item[3].replace(' ', '')), int(item[5])])
+            except Exception as e:
+                print(__name__, e)
+                continue
+
 
     del raw_target_table
 

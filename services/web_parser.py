@@ -17,6 +17,7 @@ class EMEXParser:
         self.pvz = pvz
         self.brand = brand
         self.data = data
+        print(__name__, data)
 
 
     def search_data(self) -> list:
