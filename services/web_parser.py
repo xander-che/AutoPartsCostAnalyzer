@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from flask import jsonify
 from models.data_models import ItemDict
-from static.constants import EMEX_BASE_URL, BASE_PVZ, TARGET_JSON_KEYS, PROXY_USER, PROXY_PASS
+from static.constants import EMEX_BASE_URL, BASE_PVZ, TARGET_JSON_KEYS, PROXY_USER, PROXY_PASS, YES, NO
 from static.messages import ERROR_NOT_PROXY_ENABLED
 from utils.validators import get_my_ip, get_proxy_ip
 
@@ -125,6 +125,10 @@ class EMEXParser:
             for item in items:
                 item_dict['key_number'].append(item[0]['key_number'])
                 item_dict['detail_num'].append(item[0]['detail_num'])
+                if item[0]['key_number'] == item[0]['detail_num']:
+                    item_dict['is_original'].append(YES)
+                else:
+                    item_dict['is_original'].append(NO)
                 item_dict['detail_name'].append(item[0]['detail_name'])
                 item_dict['delivery_time'].append(item[0]['delivery_time'])
                 item_dict['price'].append(item[0]['price'])

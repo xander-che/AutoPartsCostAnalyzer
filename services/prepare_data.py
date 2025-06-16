@@ -1,7 +1,8 @@
+import re
 from typing import Any
 from flask import jsonify, Response
 from models.data_models import OutTables
-from static.constants import NUMBERS, BAD_VALUES, BRAND_DETECT, TERGET_HEADER
+from static.constants import NUMBERS, BAD_VALUES, BRAND_DETECT, TERGET_HEADER, DOMAIN_PATTERN
 from static.messages import ERROR_NO_TABLES
 from utils.validators import get_entry_qty
 
@@ -65,7 +66,7 @@ def get_out_tables(found_result: list,
                    found_header: list,
                    total_table: list,
                    not_found_header: list) -> OutTables:
-    # ['Номер', 'Наименование', 'Продавец', 'Рейтинг', 'Срок доставки (дн.)', 'Цена (руб.)', 'Кол-во', 'Сумма (руб.)', 'Ссылка']
+    # ['Номер (ориг)', 'Номер (найден)', 'Оригинал', 'Наименование', 'Производитель',  'Рейтинг', 'Срок доставки (дн.)', 'Цена (руб.)', 'Кол-во', 'Сумма (руб.)', 'Источник']
     found_rows = list()
     not_found_rows = list()
     found_keys_list = list()
@@ -79,15 +80,19 @@ def get_out_tables(found_result: list,
             found_keys_list.append(item.key_number)
             entry_qty = get_entry_qty(entry_key_qty_list, item.key_number)
             found_total_sum += int(item.price*entry_qty)
+            match = re.search(DOMAIN_PATTERN, item.link)
             found_rows.append([item.key_number,
-                         item.detail_name,
-                         item.make_name,
-                         item.rating,
-                         item.delivery_time,
-                         item.price,
-                         str(entry_qty),
-                         str(int(item.price*entry_qty)),
-                         {'text': 'ссылка', 'url': f'{item.link}'}])
+                               item.detail_num,
+                               item.is_original,
+                               item.detail_name,
+                               item.make_name,
+                               item.rating,
+                               item.delivery_time,
+                               item.price,
+                               str(entry_qty),
+                               str(int(item.price*entry_qty)),
+                               {'text': f'{match.group(1)}', 'url': f'{item.link}'}
+                               ])
 
     # ['Кат. номер', 'Наименование', 'Цена, руб.', 'Кол-во', 'Сумма, руб.']
     for item in total_table:

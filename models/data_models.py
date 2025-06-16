@@ -43,6 +43,7 @@ class ItemDict:
         return {
                 'key_number': list(),
                 'detail_num': list(),
+                'is_original': list(),
                 'detail_name': list(),
                 'delivery_time': list(),
                 'price': list(),

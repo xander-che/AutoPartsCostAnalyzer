@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9399810-7a16-477e-ba39-90b33dac81aa" name="Changes" comment="proxy update">
+    <list default="true" id="d9399810-7a16-477e-ba39-90b33dac81aa" name="Changes" comment="raw data params update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/data_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/data_models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/prepare_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/prepare_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/web_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/web_parser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/static/constants.py" afterDir="false" />
@@ -285,7 +285,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750008997207</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="raw data params update">
+      <option name="closed" value="true" />
+      <created>1750089771453</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1750089771453</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -316,6 +324,7 @@
     <MESSAGE value="random sleep" />
     <MESSAGE value="refactoring" />
     <MESSAGE value="proxy update" />
-    <option name="LAST_COMMIT_MESSAGE" value="proxy update" />
+    <MESSAGE value="raw data params update" />
+    <option name="LAST_COMMIT_MESSAGE" value="raw data params update" />
   </component>
 </project>

@@ -517,7 +517,7 @@
                 if (result.found || result.not_found) {
                 // Таблица с найденными запчастями
                     if (result.found && result.found.rows.length > 0) {
-                        createTable(resultDiv, result.found, 'Найдено на EMEX.RU по заданным параметрам', 'found-table', 'table-title-found');
+                        createTable(resultDiv, result.found, 'Найдено на по заданным параметрам', 'found-table', 'table-title-found');
 
                         // Добавляем строку с суммой
                         if (result.found.total_sum) {
@@ -530,7 +530,7 @@
 
                     // Таблица с ненайденными запчастями
                     if (result.not_found && result.not_found.rows.length > 0) {
-                        createTable(resultDiv, result.not_found, 'Не найдено на EMEX.RU по заданным параметрам', 'not-found-table', 'table-title-not-found');
+                        createTable(resultDiv, result.not_found, 'Не найдено по заданным параметрам', 'not-found-table', 'table-title-not-found');
 
                         // Добавляем строку с суммой
                         if (result.not_found.total_sum) {
