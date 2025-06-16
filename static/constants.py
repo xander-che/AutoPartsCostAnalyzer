@@ -7,7 +7,7 @@ DOMAIN_PATTERN = r'https?://([^/]+)'
 BASE_PVZ = '38140'
 BRAND_DETECT = ['марка', 'модель']
 TARGET_JSON_KEYS = ['originals', 'analogs']
-FOUND_TABLE_HEADER = ['Номер (ориг.)',
+FOUND_TABLE_HEADER = ['Номер (оригинал)',
                       'Номер (найден)',
                       'Оригинал',
                       'Наименование',
