@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9399810-7a16-477e-ba39-90b33dac81aa" name="Changes" comment="raw data params update">
+    <list default="true" id="d9399810-7a16-477e-ba39-90b33dac81aa" name="Changes" comment="out table update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/data_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/data_models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/prepare_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/prepare_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/web_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/web_parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/static/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/upload.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -293,7 +288,23 @@
       <option name="project" value="LOCAL" />
       <updated>1750089771453</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="out table update">
+      <option name="closed" value="true" />
+      <created>1750098068545</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1750098068545</updated>
+    </task>
+    <task id="LOCAL-00028" summary="out table update">
+      <option name="closed" value="true" />
+      <created>1750098226153</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1750098226153</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -325,6 +336,7 @@
     <MESSAGE value="refactoring" />
     <MESSAGE value="proxy update" />
     <MESSAGE value="raw data params update" />
-    <option name="LAST_COMMIT_MESSAGE" value="raw data params update" />
+    <MESSAGE value="out table update" />
+    <option name="LAST_COMMIT_MESSAGE" value="out table update" />
   </component>
 </project>
