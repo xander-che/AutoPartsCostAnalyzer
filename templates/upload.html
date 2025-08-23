@@ -2,7 +2,18 @@
 <html>
 <head>
     <meta charset="UTF-8">  
-    <title>АСА</title>
+    <title>Анализатор Стоимости Автозапчастей</title>
+    <!-- Стандартные favicons -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
+    <!-- Android/Web App Manifest -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
+    <!-- Цвета для мобильных -->
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         body {
             font-family: Arial, sans-serif;

@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
+
 @dataclass
 class EntryParams:
     rating: float
@@ -21,7 +22,7 @@ class EntryParams:
                             'strict_compliance': self.strict_compliance,
                             'proxy_ip': self.proxy_ip,
                             'proxy_port': self.proxy_port}]
-        }
+                }
 
 
 @dataclass
@@ -32,7 +33,7 @@ class RawTables:
     def tables_to_dict(self):
         return {'tables': [{'page': self.page,
                             'table': self.table}]
-        }
+                }
 
 
 @dataclass
@@ -41,18 +42,18 @@ class ItemDict:
     @staticmethod
     def get_dict():
         return {
-                'key_number': list(),
-                'detail_num': list(),
-                'is_original': list(),
-                'detail_name': list(),
-                'delivery_time': list(),
-                'price': list(),
-                'min_qty': list(),
-                'max_qty': list(),
-                'make_name': list(),
-                'link': list(),
-                'rating': list()
-            }
+            'key_number': list(),
+            'detail_num': list(),
+            'is_original': list(),
+            'detail_name': list(),
+            'delivery_time': list(),
+            'price': list(),
+            'min_qty': list(),
+            'max_qty': list(),
+            'make_name': list(),
+            'link': list(),
+            'rating': list()
+        }
 
 
 @dataclass

@@ -2,8 +2,12 @@ from flask import Blueprint, request, jsonify, render_template
 from services.prepare_data import get_brand, get_tables_data, get_out_tables
 from services.web_parser import EMEXParser
 from static.constants import BASE_PVZ, FOUND_TABLE_HEADER, NOT_FOUND_TABLE_HEADER
-from static.messages import ERROR_EMPTY_TABLES, ERROR_FILE_TYPE, ERROR_NO_SELECTED_FILE, ERROR_NOT_FILE_PART, \
-    ERROR_NOT_PROXY_ENABLED, NO_DATA_FOUND
+from static.messages import (ERROR_EMPTY_TABLES,
+                             ERROR_FILE_TYPE,
+                             ERROR_NO_SELECTED_FILE,
+                             ERROR_NOT_FILE_PART,
+                             ERROR_NOT_PROXY_ENABLED,
+                             NO_DATA_FOUND)
 from utils.validators import allowed_file_type
 from services.entry_data_processing import pdf_parser
 
@@ -29,7 +33,6 @@ def upload_data():
     if not allowed_file_type(file.filename):
         return jsonify({'error': ERROR_FILE_TYPE}), 400
 
-
     results = pdf_parser(file=file)
 
     return results
@@ -50,7 +53,6 @@ def run_process():
 
     entry_table_data, raw_key_list, total_table = get_tables_data(raw_entry_tables)
     entry_key_qty_list = [(item[1], item[4]) for item in entry_table_data]
-    print(__name__, entry_key_qty_list)
     target_brand = get_brand(raw_entry_tables)
 
     print(__name__, entry_table_data)
@@ -64,7 +66,6 @@ def run_process():
             return jsonify({'error': ERROR_NOT_PROXY_ENABLED}), 305
     elif len(result) == 0:
         return jsonify({'error': NO_DATA_FOUND}), 200
-
 
     result_table = get_out_tables(result,
                                   entry_key_qty_list,

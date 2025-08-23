@@ -19,7 +19,6 @@ class EMEXParser:
         self.data = data
         print(__name__, data)
 
-
     def search_data(self) -> list:
 
         result_table = list()
@@ -31,13 +30,12 @@ class EMEXParser:
             "Origin": "https://emex.ru"
         }
 
-
         proxy_ip = self.entry_params['proxy_ip']
         proxy_port = self.entry_params['proxy_port']
 
         proxies = {
             'http': f'http://{PROXY_USER}:{PROXY_PASS}@{proxy_ip}:{proxy_port}',
-            'https': f'http://{PROXY_USER}:{PROXY_PASS}@{proxy_ip}:{proxy_port}'# http://185.10.129.14:3128
+            'https': f'http://{PROXY_USER}:{PROXY_PASS}@{proxy_ip}:{proxy_port}'  # http://185.10.129.14:3128
         }
         print(__name__, proxies)
 
@@ -72,7 +70,6 @@ class EMEXParser:
 
         return self.__analyzing(self.entry_params, result_table)
 
-
     @staticmethod
     def __parse_data(raw_data: dict, key_number: str) -> list:
 
@@ -103,7 +100,8 @@ class EMEXParser:
                                                     'min_qty': min_qty,
                                                     'max_qty': int(max_qty),
                                                     'make_name': make_name,
-                                                    'link': f'{EMEX_BASE_URL}/{detail_num}/{make_name}/{BASE_PVZ}'.replace(' ', '%20')}
+                                                    'link': f'{EMEX_BASE_URL}/{detail_num}/{make_name}/{BASE_PVZ}'.replace(
+                                                        ' ', '%20')}
                                     if key3 == 'rating' and len(item) > 0:
                                         item['rating'] = value3
                                     if len(item) == 10:
@@ -111,14 +109,10 @@ class EMEXParser:
 
         return result_table
 
-
     @staticmethod
     def __analyzing(entry_params: dict, search_table: list) -> list:
 
         result = list()
-        # pd.set_option('display.max_rows', 500)
-        # pd.set_option('display.max_columns', 500)
-        # pd.set_option('display.width', 1000)
 
         for items in search_table:
             item_dict = ItemDict.get_dict()
@@ -142,18 +136,14 @@ class EMEXParser:
 
             for row in df.itertuples():
                 if row.delivery_time <= entry_params['delivery_time'] and \
-                    row.max_qty >= entry_params['availability'] and \
+                        row.max_qty >= entry_params['availability'] and \
                         row.rating >= entry_params['rating']:
                     if entry_params['strict_compliance'] == 'on':
-                            if row.key_number == row.detail_num:
-                                result.append(row)
-                                break
+                        if row.key_number == row.detail_num:
+                            result.append(row)
+                            break
                     else:
                         result.append(row)
                         break
 
         return result
-
-
-
-
