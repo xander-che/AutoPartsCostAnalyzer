@@ -1,17 +1,34 @@
 from flask import Blueprint, request, jsonify, render_template
 from services.prepare_data import get_brand, get_tables_data, get_out_tables
 from services.web_parser import EMEXParser
-from static.constants import BASE_PVZ, FOUND_TABLE_HEADER, NOT_FOUND_TABLE_HEADER
+from services.exist_parser import ExistParser
+from static.constants import BASE_PVZ, DATA_SOURCE_EMEX, DATA_SOURCE_EXIST, FOUND_TABLE_HEADER, NOT_FOUND_TABLE_HEADER
 from static.messages import (ERROR_EMPTY_TABLES,
+                             ERROR_EXIST_UNAVAILABLE,
                              ERROR_FILE_TYPE,
                              ERROR_NO_SELECTED_FILE,
                              ERROR_NOT_FILE_PART,
                              ERROR_NOT_PROXY_ENABLED,
+                             ERROR_UNKNOWN_DATA_SOURCE,
                              NO_DATA_FOUND)
 from utils.validators import allowed_file_type
 from services.entry_data_processing import pdf_parser
 
 params = Blueprint('pdf', __name__)
+
+
+def get_parser(entry_params: dict, brand: str, entry_table_data: list):
+    """Выбирает парсер источника данных, указанного в форме."""
+
+    data_source = entry_params.get('data_source', DATA_SOURCE_EMEX)
+
+    if data_source == DATA_SOURCE_EXIST:
+        return ExistParser(entry_params, BASE_PVZ, brand, entry_table_data)
+
+    if data_source == DATA_SOURCE_EMEX:
+        return EMEXParser(entry_params, BASE_PVZ, brand, entry_table_data)
+
+    return None
 
 
 @params.route('/')
@@ -58,13 +75,20 @@ def run_process():
     print(__name__, entry_table_data)
     print(__name__, target_brand)
 
-    emex_parser = EMEXParser(entry_params, BASE_PVZ, target_brand, entry_table_data)
-    result = emex_parser.search_data()
+    parser = get_parser(entry_params, target_brand, entry_table_data)
 
-    if len(result) == 1:
-        if result[0] == ERROR_NOT_PROXY_ENABLED:
-            return jsonify({'error': ERROR_NOT_PROXY_ENABLED}), 305
-    elif len(result) == 0:
+    if parser is None:
+        return jsonify({'error': ERROR_UNKNOWN_DATA_SOURCE}), 400
+
+    result = parser.search_data()
+
+    if len(result) == 1 and result[0] == ERROR_NOT_PROXY_ENABLED:
+        return jsonify({'error': ERROR_NOT_PROXY_ENABLED}), 305
+
+    if len(result) == 1 and result[0] == ERROR_EXIST_UNAVAILABLE:
+        return jsonify({'error': ERROR_EXIST_UNAVAILABLE}), 200
+
+    if len(result) == 0:
         return jsonify({'error': NO_DATA_FOUND}), 200
 
     result_table = get_out_tables(result,

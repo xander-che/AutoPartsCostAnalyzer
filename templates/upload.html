@@ -386,6 +386,19 @@
             color: #4CAF50;
             text-decoration: underline;
         }
+
+        /* Подсказка о параметрах, зависящих от источника данных */
+        .field-hint {
+            display: block;
+            margin-top: 4px;
+            font-size: 11px;
+            line-height: 1.3;
+            color: #888;
+        }
+
+        .field-hint[hidden] {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -399,17 +412,19 @@
                     <label for="data_source">Источник данных:</label>
                     <select id="data_source" name="data_source" required>
                         <option value="emex.ru" selected>emex.ru</option>
+                        <option value="exist.ru">exist.ru</option>
                     </select>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="pvz_group">
                     <label for="pvz_code">Код ПВЗ:</label>
                     <select id="pvz_code" name="pvz_code" required>
                         <option value="38140" selected>38140</option>
                     </select>
+                    <span class="field-hint" id="pvz_hint" hidden>Для exist.ru офис определяется автоматически по IP</span>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="rating_group">
                     <label for="rating">Рейтинг поставщика:</label>
                     <select id="rating" name="rating" required>
                         <option value="" disabled selected>Выберите рейтинг</option>
@@ -420,6 +435,7 @@
                             }
                         </script>
                     </select>
+                    <span class="field-hint" id="rating_hint" hidden>У exist.ru своя шкала «Надёжность», фильтр по рейтингу не применяется</span>
                 </div>
 
                 <div class="form-group">
@@ -496,6 +512,26 @@
 
         <div id="result"></div>
     </div>
+
+    <script>
+        // Параметры, зависящие от выбранного источника данных
+        const dataSourceSelect = document.getElementById('data_source');
+        const pvzSelect = document.getElementById('pvz_code');
+        const pvzHint = document.getElementById('pvz_hint');
+        const ratingHint = document.getElementById('rating_hint');
+
+        function updateSourceFields() {
+            const isExist = dataSourceSelect.value === 'exist.ru';
+
+            // У exist.ru код ПВЗ не используется: офис определяется по IP запроса
+            pvzSelect.disabled = isExist;
+            pvzHint.hidden = !isExist;
+            ratingHint.hidden = !isExist;
+        }
+
+        dataSourceSelect.addEventListener('change', updateSourceFields);
+        updateSourceFields();
+    </script>
 
     <script>
         document.getElementById('uploadForm').addEventListener('submit', async (e) => {
