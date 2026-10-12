@@ -1,6 +1,8 @@
+import json
 import logging
 import os
 import secrets
+import sqlite3
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -34,10 +36,65 @@ logger = logging.getLogger(__name__)
 params = Blueprint('pdf', __name__)
 
 JOB_TTL_SECONDS = int(os.getenv('JOB_TTL_SECONDS', '3600'))
+# A file-backed store lets every Gunicorn worker on this host see the same jobs.
+JOB_STORE_PATH = os.getenv('JOB_STORE_PATH', os.path.join('instance', 'jobs.sqlite3'))
 _jobs = {}
 _jobs_lock = threading.Lock()
 _executor = ThreadPoolExecutor(max_workers=max(1, int(os.getenv('SEARCH_WORKERS', '2'))),
                                thread_name_prefix='parts-search')
+
+
+def _connect_job_store():
+    directory = os.path.dirname(os.path.abspath(JOB_STORE_PATH))
+    os.makedirs(directory, exist_ok=True)
+    connection = sqlite3.connect(JOB_STORE_PATH, timeout=30)
+    connection.row_factory = sqlite3.Row
+    return connection
+
+
+def _init_job_store() -> None:
+    connection = _connect_job_store()
+    try:
+        with connection:
+            connection.execute('''
+                CREATE TABLE IF NOT EXISTS jobs (
+                    job_id TEXT PRIMARY KEY,
+                    payload TEXT NOT NULL,
+                    updated_at REAL NOT NULL,
+                    status TEXT NOT NULL
+                )
+            ''')
+    finally:
+        connection.close()
+
+
+_init_job_store()
+
+
+def _save_job(job_id: str, job: dict) -> None:
+    payload = json.dumps(job, ensure_ascii=False)
+    connection = _connect_job_store()
+    try:
+        with connection:
+            connection.execute('''
+                INSERT INTO jobs (job_id, payload, updated_at, status)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT(job_id) DO UPDATE SET
+                    payload = excluded.payload,
+                    updated_at = excluded.updated_at,
+                    status = excluded.status
+            ''', (job_id, payload, job.get('updated_at', time.time()), job.get('status', 'queued')))
+    finally:
+        connection.close()
+
+
+def _load_job(job_id: str):
+    connection = _connect_job_store()
+    try:
+        row = connection.execute('SELECT payload FROM jobs WHERE job_id = ?', (job_id,)).fetchone()
+    finally:
+        connection.close()
+    return json.loads(row['payload']) if row else None
 
 
 def is_error_response(value) -> bool:
@@ -56,6 +113,14 @@ def get_parser(entry_params: dict, brand: str, entry_table_data: list):
 
 def _cleanup_jobs() -> None:
     cutoff = time.time() - JOB_TTL_SECONDS
+    connection = _connect_job_store()
+    try:
+        with connection:
+            connection.execute('''
+                DELETE FROM jobs WHERE updated_at < ? AND status IN ('completed', 'failed')
+            ''', (cutoff,))
+    finally:
+        connection.close()
     with _jobs_lock:
         expired = [job_id for job_id, job in _jobs.items()
                    if job.get('updated_at', 0) < cutoff and job.get('status') in {'completed', 'failed'}]
@@ -65,10 +130,13 @@ def _cleanup_jobs() -> None:
 
 def _update_job(job_id: str, **values) -> None:
     with _jobs_lock:
-        job = _jobs.get(job_id)
-        if job is not None:
-            job.update(values)
-            job['updated_at'] = time.time()
+        job = _load_job(job_id) or _jobs.get(job_id)
+        if job is None:
+            return
+        job.update(values)
+        job['updated_at'] = time.time()
+        _jobs[job_id] = job
+        _save_job(job_id, job)
 
 
 def _search_job(job_id: str,
@@ -160,7 +228,9 @@ def run_process():
     job_id = secrets.token_urlsafe(18)
     now = time.time()
     with _jobs_lock:
-        _jobs[job_id] = {'status': 'queued', 'created_at': now, 'updated_at': now}
+        job = {'status': 'queued', 'created_at': now, 'updated_at': now}
+        _jobs[job_id] = job
+        _save_job(job_id, job)
 
     _executor.submit(_search_job, job_id, parser, entry_key_qty_list, total_table)
     return jsonify({'job_id': job_id, 'status': 'queued'}), 202
@@ -169,8 +239,11 @@ def run_process():
 @params.route('/process_status/<job_id>', methods=['GET'])
 def process_status(job_id: str):
     _cleanup_jobs()
-    with _jobs_lock:
-        job = dict(_jobs.get(job_id) or {})
+    job = _load_job(job_id)
+    if job is None:
+        # Keep compatibility with jobs seeded directly by older integrations.
+        with _jobs_lock:
+            job = dict(_jobs.get(job_id) or {})
 
     if not job:
         return jsonify({'error': 'Задача не найдена или уже удалена'}), 404
