@@ -1,0 +1,16 @@
+[Unit]
+Description=Auto Parts Cost Analyzer
+After=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/AutoPartsCostAnalyzer
+EnvironmentFile=/opt/AutoPartsCostAnalyzer/.env
+ExecStart=/opt/AutoPartsCostAnalyzer/.venv/bin/gunicorn app:app --config gunicorn.conf.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
