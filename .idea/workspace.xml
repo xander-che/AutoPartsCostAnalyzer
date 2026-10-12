@@ -5,18 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d9399810-7a16-477e-ba39-90b33dac81aa" name="Changes" comment="out table update">
-      <change afterPath="$PROJECT_DIR$/static/favicon/android-chrome-192x192.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/favicon/android-chrome-512x512.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/favicon/apple-touch-icon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/favicon/favicon-16x16.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/favicon/favicon-32x32.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/favicon/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/AutoPartsCostAnalyzer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AutoPartsCostAnalyzer.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/controller.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/data_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/data_models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/base_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/base_parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/entry_data_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/entry_data_processing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/exist_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/exist_parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/prepare_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/prepare_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/web_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/web_parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/static/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/messages.py" beforeDir="false" afterPath="$PROJECT_DIR$/static/messages.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/upload.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/validators.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/validators.py" afterDir="false" />
     </list>
@@ -45,7 +49,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/xander-che/AutoPartsCostAnalyzer.git&quot;,
-    &quot;accountId&quot;: &quot;0ad23728-4066-49b0-bdf4-89ca00db06f2&quot;
+    &quot;accountId&quot;: &quot;1db16532-0a32-475a-aa38-ee226a3322cb&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -56,25 +60,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.app.executor": "Run",
-    "Python.controller.executor": "Run",
-    "Python.dev.executor": "Run",
-    "Python.entry_params_controller.executor": "Run",
-    "Python.prepare_data.executor": "Run",
-    "Python.web_parser.executor": "Debug",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/ACHER/PycharmProjects/AutoPartsCostAnalyzer/static/favicon"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.app.executor&quot;: &quot;Run&quot;,
+    &quot;Python.controller.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dev.executor&quot;: &quot;Run&quot;,
+    &quot;Python.entry_params_controller.executor&quot;: &quot;Run&quot;,
+    &quot;Python.prepare_data.executor&quot;: &quot;Run&quot;,
+    &quot;Python.web_parser.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/ACHER/PycharmProjects/AutoPartsCostAnalyzer/static/favicon&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\ACHER\PycharmProjects\AutoPartsCostAnalyzer\static\favicon" />
@@ -87,7 +92,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-c69650fc56ca-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.15619.17" />
+        <option value="bundled-python-sdk-ce6832f46686-7b97d883f26b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.25557.178" />
       </set>
     </attachedChunks>
   </component>
@@ -324,7 +329,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750098226153</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="out table update">
+      <option name="closed" value="true" />
+      <created>1791306807880</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1791306807880</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

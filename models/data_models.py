@@ -12,6 +12,9 @@ class EntryParams:
     strict_compliance: str
     proxy_ip: str
     proxy_port: str
+    proxy_scheme: str = 'http'
+    proxy_user: str = ''
+    proxy_password: str = ''
 
     def params_to_dict(self):
         return {'params': [{'rating': self.rating,
@@ -21,7 +24,10 @@ class EntryParams:
                             'pvz_code': self.pvz_code,
                             'strict_compliance': self.strict_compliance,
                             'proxy_ip': self.proxy_ip,
-                            'proxy_port': self.proxy_port}]
+                            'proxy_port': self.proxy_port,
+                            'proxy_scheme': self.proxy_scheme,
+                            'proxy_user': self.proxy_user,
+                            'proxy_password': self.proxy_password}]
                 }
 
 

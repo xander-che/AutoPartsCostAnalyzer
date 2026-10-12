@@ -1,11 +1,12 @@
 import json
+import logging
 import math
 import re
 from urllib.parse import quote
 
 import requests
 
-from services.base_parser import BaseParser
+from services.base_parser import BaseParser, SourceAccessError
 from static.constants import (BASE_PVZ,
                               EXIST_BASE_URL,
                               EXIST_CATALOG_LINK_PATTERN,
@@ -19,7 +20,10 @@ from static.constants import (BASE_PVZ,
                               EXIST_SEARCH_URL,
                               EXIST_TIMEOUT,
                               EXIST_UNLIMITED_QTY)
-from static.messages import ERROR_EXIST_UNAVAILABLE
+from static.messages import ERROR_EXIST_UNAVAILABLE, ERROR_NOT_PROXY_ENABLED
+
+
+logger = logging.getLogger(__name__)
 
 
 class ExistParser(BaseParser):
@@ -32,6 +36,7 @@ class ExistParser(BaseParser):
     """
 
     apply_rating_filter = False
+    source_error_message = ERROR_EXIST_UNAVAILABLE
 
     HEADERS = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
@@ -47,18 +52,23 @@ class ExistParser(BaseParser):
 
     def __init__(self, entry_params: dict, pvz: str = BASE_PVZ, brand: str = '', data: list = None):
         super().__init__(entry_params, pvz, brand, data)
-        print(__name__, data)
 
     def prepare_session(self, session: requests.Session, proxies: dict) -> None:
-        session.proxies.update(proxies)
+        super().prepare_session(session, proxies)
 
     def search_data(self) -> list:
 
         result = super().search_data()
 
         # Пустой результат уточняем: возможно, источник вообще не отдал данные текущему IP
-        if not result and not self.__source_available():
-            return [ERROR_EXIST_UNAVAILABLE]
+        if not result:
+            try:
+                if not self.__source_available():
+                    return [ERROR_EXIST_UNAVAILABLE]
+            except requests.exceptions.ConnectionError:
+                return [ERROR_NOT_PROXY_ENABLED]
+            except SourceAccessError:
+                return [ERROR_EXIST_UNAVAILABLE]
 
         return result
 
@@ -76,7 +86,7 @@ class ExistParser(BaseParser):
         finally:
             session.close()
 
-        print(__name__, 'источник доступен:', available)
+        logger.info('exist.ru доступен через прокси: %s', available)
 
         return available
 
@@ -119,7 +129,7 @@ class ExistParser(BaseParser):
                     if offer is not None:
                         offers.append([offer])
 
-        print(__name__, key_number, len(offers))
+        logger.info('Exist: для %s найдено %s предложений', key_number, len(offers))
 
         return offers
 
@@ -163,7 +173,7 @@ class ExistParser(BaseParser):
         try:
             products, _ = json.JSONDecoder().raw_decode(text[marker.end():].lstrip())
         except ValueError as e:
-            print(__name__, 'не удалось разобрать данные страницы цен:', e)
+            logger.warning('Не удалось разобрать данные страницы Exist: %s', e)
             return None
 
         query_context = {key: self.__hidden_value(text, field) for key, field in EXIST_HIDDEN_FIELDS.items()}
@@ -210,7 +220,7 @@ class ExistParser(BaseParser):
         try:
             data = response.json()
         except ValueError as e:
-            print(__name__, 'не удалось разобрать список предложений:', e)
+            logger.warning('Не удалось разобрать список предложений Exist: %s', e)
             return []
 
         if not isinstance(data, dict):
@@ -219,7 +229,11 @@ class ExistParser(BaseParser):
         raw_offers = data.get('d')
 
         if isinstance(raw_offers, str):
-            raw_offers = json.loads(raw_offers) if raw_offers else []
+            try:
+                raw_offers = json.loads(raw_offers) if raw_offers else []
+            except ValueError as e:
+                logger.warning('Не удалось разобрать полный список Exist: %s', e)
+                return []
 
         if not isinstance(raw_offers, list):
             return []
@@ -306,11 +320,18 @@ class ExistParser(BaseParser):
         try:
             response = getattr(session, method)(url, headers=request_headers, timeout=EXIST_TIMEOUT, **kwargs)
         except requests.RequestException as e:
-            print(__name__, f'ошибка запроса {url}: {e}')
-            return None
+            logger.warning('Ошибка запроса Exist %s: %s', url, e)
+            raise
+
+        if response.status_code == 407:
+            raise requests.exceptions.ProxyError('прокси отклонил авторизацию')
 
         if response.status_code != 200:
-            print(__name__, f'статус {response.status_code} для {url}')
-            return None
+            logger.warning('Exist вернул HTTP %s для %s', response.status_code, url)
+            raise SourceAccessError(f'Exist вернул HTTP {response.status_code}')
+
+        if 'заблокирован' in response.text.lower():
+            logger.warning('exist.ru заблокировал IP прокси')
+            raise SourceAccessError('Exist заблокировал IP прокси')
 
         return response

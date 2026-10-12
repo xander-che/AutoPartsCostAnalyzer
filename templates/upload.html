@@ -341,6 +341,7 @@
 
         .proxy-fields {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
             align-items: flex-end;
         }
@@ -406,7 +407,7 @@
         <h1>Анализатор Стоимости Автозапчастей</h1>
         <h3>Укажите параметры для поиска и загрузите файл</h3>
 
-        <form method="post" enctype="multipart/form-data" action="/upload" id="uploadForm">
+        <form method="post" enctype="multipart/form-data" action="/run_process" id="uploadForm">
             <div class="form-row">
                 <div class="form-group">
                     <label for="data_source">Источник данных:</label>
@@ -487,18 +488,37 @@
                 <!-- Поля прокси справа -->
                 <div class="proxy-fields">
                     <div class="proxy-field">
-                        <label for="proxy_ip">IP адрес прокси:</label>
-                        <input type="text" id="proxy_ip" name="proxy_ip" placeholder="192.168.1.1">
+                        <label for="proxy_scheme">Протокол:</label>
+                        <select id="proxy_scheme" name="proxy_scheme">
+                            <option value="http" selected>HTTP</option>
+                            <option value="https">HTTPS</option>
+                        </select>
+                    </div>
+
+                    <div class="proxy-field">
+                        <label for="proxy_ip">Адрес прокси:</label>
+                        <input type="text" id="proxy_ip" name="proxy_ip" placeholder="192.168.1.1 или http://host:port">
                     </div>
 
                     <div class="proxy-field">
                         <label for="proxy_port">Порт:</label>
-                        <input type="text" id="proxy_port" name="proxy_port" placeholder="8080">
+                        <input type="number" id="proxy_port" name="proxy_port" min="1" max="65535" placeholder="8080">
+                    </div>
+
+                    <div class="proxy-field">
+                        <label for="proxy_user">Логин (если нужен):</label>
+                        <input type="text" id="proxy_user" name="proxy_user" autocomplete="username">
+                    </div>
+
+                    <div class="proxy-field">
+                        <label for="proxy_password">Пароль (если нужен):</label>
+                        <input type="password" id="proxy_password" name="proxy_password" autocomplete="current-password">
                     </div>
                 </div>
             </div>
 
             <div class="proxy-link-container">
+                <span class="field-hint" id="proxy_hint">Для Emex прокси необязателен.</span>
                 <a href="https://hixxxx.name/proxy-list/?country=ARAMAUATBDBYBOBRBGKHCACLCOCRCYCZEEFIFRDEGRHKINIDIRITJPJOKZKRLTLUMXNLNZPHPLRORUSCSGZAESSECHTZTTTNTRUAAEGBUSVN&type=s&anon=4#list"
                    target="_blank"
                    rel="noopener noreferrer"
@@ -517,16 +537,22 @@
         // Параметры, зависящие от выбранного источника данных
         const dataSourceSelect = document.getElementById('data_source');
         const pvzSelect = document.getElementById('pvz_code');
+        const ratingSelect = document.getElementById('rating');
         const pvzHint = document.getElementById('pvz_hint');
         const ratingHint = document.getElementById('rating_hint');
+        const proxyHint = document.getElementById('proxy_hint');
 
         function updateSourceFields() {
             const isExist = dataSourceSelect.value === 'exist.ru';
 
             // У exist.ru код ПВЗ не используется: офис определяется по IP запроса
             pvzSelect.disabled = isExist;
+            ratingSelect.disabled = isExist;
             pvzHint.hidden = !isExist;
             ratingHint.hidden = !isExist;
+            proxyHint.textContent = isExist
+                ? 'Для Exist нужен российский резидентский или ISP-прокси; дата-центры часто блокируются.'
+                : 'Для Emex прокси необязателен: оставьте поля пустыми для прямого подключения.';
         }
 
         dataSourceSelect.addEventListener('change', updateSourceFields);
@@ -556,7 +582,15 @@
                     body: formData
                 });
 
-                const result = await response.json();
+                let result = await readJsonResponse(response);
+
+                if (!response.ok) {
+                    throw new Error(result.error || `HTTP ${response.status}`);
+                }
+
+                if (response.status === 202 && result.job_id) {
+                    result = await waitForJob(result.job_id);
+                }
 
                 // Очищаем предыдущие результаты
                 resultDiv.innerHTML = '';
@@ -564,13 +598,13 @@
                 if (result.found || result.not_found) {
                 // Таблица с найденными запчастями
                     if (result.found && result.found.rows.length > 0) {
-                        createTable(resultDiv, result.found, 'Найдено на по заданным параметрам', 'found-table', 'table-title-found');
+                        createTable(resultDiv, result.found, 'Найдено по заданным параметрам', 'found-table', 'table-title-found');
 
                         // Добавляем строку с суммой
                         if (result.found.total_sum) {
                             const sumDiv = document.createElement('div');
                             sumDiv.className = 'sum-row found-sum';
-                            sumDiv.innerHTML = `Общая стоимость найденных запчастей: <span class="sum-value">${result.found.total_sum.toLocaleString('ru-RU')} руб.</span>`;
+                            sumDiv.innerHTML = `Общая стоимость найденных запчастей: <span class="sum-value">${formatMoney(result.found.total_sum)} руб.</span>`;
                             resultDiv.appendChild(sumDiv);
                         }
                     }
@@ -583,7 +617,7 @@
                         if (result.not_found.total_sum) {
                             const sumDiv = document.createElement('div');
                             sumDiv.className = 'sum-row not-found-sum';
-                            sumDiv.innerHTML = `Общая стоимость ненайденных запчастей: <span class="sum-value">${result.not_found.total_sum.toLocaleString('ru-RU')} руб.</span>`;
+                            sumDiv.innerHTML = `Общая стоимость ненайденных запчастей: <span class="sum-value">${formatMoney(result.not_found.total_sum)} руб.</span>`;
                             resultDiv.appendChild(sumDiv);
                         }
                     }
@@ -595,23 +629,105 @@
                         const percentClass = result.total_comparison.percentage < 0 ? 'percentage' : 'percentage positive';
 
                         totalDiv.innerHTML = `
-                            Общий результат: ${result.total_comparison.final_sum.toLocaleString('ru-RU')} руб.
+                            Общий результат: ${formatMoney(result.total_comparison.final_sum)} руб.
                             (<span class="${percentClass}">${result.total_comparison.percentage > 0 ? '+' : ''}${result.total_comparison.percentage}%</span>)
                         `;
                         resultDiv.appendChild(totalDiv);
                     }
                 } else {
                     // console.log("Ответ сервера:", result); // Для отладки
-                    const errorMsg = result.error || 'Данные не найдены';
-                    resultDiv.innerHTML = `<p class="no-data">Сообщение: ${errorMsg}</p>`;
+                    showMessage(resultDiv, 'no-data', `Сообщение: ${result.error || 'Данные не найдены'}`);
                 }
 
             } catch (error) {
-                resultDiv.innerHTML = `<p class="error">Ошибка: ${error.message}</p>`;
+                showMessage(resultDiv, 'error', `Ошибка: ${error.message}`);
             } finally {
                 submitBtn.disabled = false;
             }
         });
+
+        // Сообщение выводим через textContent: текст приходит с сервера и вставлять его как HTML нельзя
+        function showMessage(container, className, text) {
+            container.innerHTML = '';
+
+            const paragraph = document.createElement('p');
+            paragraph.className = className;
+            paragraph.textContent = text;
+
+            container.appendChild(paragraph);
+        }
+
+        const sleep = (milliseconds) => new Promise(resolve => setTimeout(resolve, milliseconds));
+
+        async function waitForJob(jobId) {
+            const deadline = Date.now() + 15 * 60 * 1000;
+
+            while (Date.now() < deadline) {
+                await sleep(1500);
+
+                const response = await fetch(`/process_status/${encodeURIComponent(jobId)}`, {
+                    cache: 'no-store'
+                });
+                const job = await readJsonResponse(response);
+
+                if (!response.ok) {
+                    throw new Error(job.error || `HTTP ${response.status}`);
+                }
+                if (job.status === 'completed') {
+                    return job.result || {error: 'Поиск завершён без результата'};
+                }
+                if (job.status === 'failed') {
+                    throw new Error((job.result && job.result.error) || 'Ошибка фонового поиска');
+                }
+            }
+
+            throw new Error('Поиск занял больше 15 минут');
+        }
+
+        function formatMoney(value) {
+            const number = Number(value);
+            return Number.isFinite(number) ? number.toLocaleString('ru-RU') : value;
+        }
+
+        // Сервер может ответить HTML-страницей (ограничение размера, таймаут, сбой),
+        // поэтому до разбора JSON проверяем, что это действительно JSON
+        async function readJsonResponse(response) {
+            const contentType = response.headers.get('content-type') || '';
+
+            if (!contentType.includes('application/json')) {
+                const body = await response.text();
+
+                throw new Error(describeServerFailure(response, body));
+            }
+
+            try {
+                return await response.json();
+            } catch (e) {
+                throw new Error(`Сервер вернул некорректный JSON (HTTP ${response.status})`);
+            }
+        }
+
+        function describeServerFailure(response, body) {
+            const reasons = {
+                408: 'сервер не дождался запроса',
+                413: 'файл больше допустимого размера загрузки на сервере',
+                502: 'приложение недоступно или перезапускается',
+                504: 'превышено время ожидания: обработка идёт дольше, чем разрешено веб-сервером'
+            };
+
+            const title = (body.match(/<title>([^<]*)<\/title>/i) || [])[1];
+
+            let message = `Сервер вернул не JSON (HTTP ${response.status})`;
+
+            if (reasons[response.status]) {
+                message += `: ${reasons[response.status]}`;
+            }
+            if (title) {
+                message += `. Ответ сервера: «${title.trim()}»`;
+            }
+
+            return message;
+        }
 
         // Функция для создания таблицы
         function createTable(container, tableData, title, tableClass, titleClass) {

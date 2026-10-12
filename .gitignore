@@ -1,3 +1,7 @@
 /dev.py
 /old_versions/
 .idea/
+__pycache__/
+*.py[cod]
+.env
+.tmp-*
