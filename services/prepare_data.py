@@ -5,7 +5,6 @@ from flask import jsonify, Response
 from models.data_models import OutTables
 from static.constants import BAD_VALUES, BRAND_DETECT, DOMAIN_PATTERN, ENTRY_REQUIRED_COLUMNS
 from static.messages import ERROR_NO_TABLES
-from utils.validators import get_entry_qty
 
 
 logger = logging.getLogger(__name__)
@@ -222,7 +221,14 @@ def get_out_tables(found_result: list,
     # ['Номер (ориг)', 'Номер (найден)', 'Оригинал', 'Наименование', 'Производитель',  'Рейтинг', 'Срок доставки (дн.)', 'Цена (руб.)', 'Кол-во', 'Сумма (руб.)', 'Источник']
     found_rows = list()
     not_found_rows = list()
-    found_keys_list = list()
+    found_prices_by_key = {}
+    entry_quantities_by_key = {
+        re.sub(r'[^0-9A-ZА-Я]', '', str(item[0] or '').upper()): 0
+        for item in entry_key_qty_list
+    }
+    for key_number, quantity in entry_key_qty_list:
+        normalized_key = re.sub(r'[^0-9A-ZА-Я]', '', str(key_number or '').upper())
+        entry_quantities_by_key[normalized_key] += int(quantity or 1)
     found_total_sum = 0
     not_found_total_sum = 0
     initial_sum = 0
@@ -230,9 +236,13 @@ def get_out_tables(found_result: list,
 
     if len(found_result) > 0:
         for item in found_result:
-            found_keys_list.append(item.key_number)
-            entry_qty = get_entry_qty(entry_key_qty_list, item.key_number)
-            found_total_sum += round(item.price * entry_qty, 2)
+            normalized_key = re.sub(r'[^0-9A-ZА-Я]', '', str(item.key_number or '').upper())
+            offer_price = float(item.price or 0)
+            current_best = found_prices_by_key.get(normalized_key)
+            if current_best is None or offer_price < current_best:
+                found_prices_by_key[normalized_key] = offer_price
+
+            entry_qty = entry_quantities_by_key.get(normalized_key, 1)
             match = re.search(DOMAIN_PATTERN, item.link)
             found_rows.append([item.key_number,
                                item.detail_num,
@@ -247,13 +257,19 @@ def get_out_tables(found_result: list,
                                {'text': match.group(1) if match else 'Источник', 'url': item.link}
                                ])
 
+    found_total_sum = sum(
+        round(price * entry_quantities_by_key.get(key, 1), 2)
+        for key, price in found_prices_by_key.items()
+    )
+
     # ['Кат. номер', 'Наименование', 'Цена, руб.', 'Кол-во', 'Сумма, руб.']
     for item in total_table:
         price = parse_number(item[3])
         quantity = int(parse_number(item[5]))
         initial_sum += price * quantity
 
-        if item[1] not in found_keys_list:
+        normalized_key = re.sub(r'[^0-9A-ZА-Я]', '', str(item[1] or '').upper())
+        if normalized_key not in found_prices_by_key:
             not_found_total_sum += round(price * quantity, 2)
             not_found_rows.append([item[1], item[2], str(price), str(quantity),
                                    str(round(price * quantity, 2))])

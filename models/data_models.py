@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 
 
@@ -15,12 +15,14 @@ class EntryParams:
     proxy_scheme: str = 'http'
     proxy_user: str = ''
     proxy_password: str = ''
+    data_sources: List[str] = field(default_factory=list)
 
     def params_to_dict(self):
         return {'params': [{'rating': self.rating,
                             'availability': self.availability,
                             'delivery_time': self.delivery_time,
                             'data_source': self.data_source,
+                            'data_sources': self.data_sources or [self.data_source],
                             'pvz_code': self.pvz_code,
                             'strict_compliance': self.strict_compliance,
                             'proxy_ip': self.proxy_ip,

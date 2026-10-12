@@ -4,7 +4,7 @@ import logging
 import pdfplumber
 from models.data_models import EntryParams, RawTables
 from flask import jsonify, request
-from static.constants import DATA_SOURCE_EMEX
+from static.constants import DATA_SOURCES, DATA_SOURCE_EMEX
 from static.messages import ERROR_INVALID_PARAMS, ERROR_PDF_PROCESSING
 
 
@@ -22,7 +22,14 @@ def get_params_dict() -> EntryParams:
     if not 0 <= rating <= 5 or not 1 <= availability <= 9999 or not 1 <= delivery_time <= 365:
         raise ValueError(ERROR_INVALID_PARAMS)
 
-    data_source = request.form.get('data_source', DATA_SOURCE_EMEX)
+    data_sources = request.form.getlist('data_sources')
+    if not data_sources:
+        legacy_source = request.form.get('data_source', DATA_SOURCE_EMEX)
+        data_sources = [legacy_source] if legacy_source else []
+    data_sources = list(dict.fromkeys(source for source in data_sources if source in DATA_SOURCES))
+    if not data_sources:
+        raise ValueError('Выберите хотя бы один сайт для поиска')
+    data_source = data_sources[0]
     pvz_code = request.form.get('pvz_code', '38140')
     strict_compliance = request.form.get('strict_match', 'off')
     proxy_ip = request.form.get('proxy_ip', '').strip()
@@ -41,7 +48,8 @@ def get_params_dict() -> EntryParams:
                        proxy_port=proxy_port,
                        proxy_scheme=proxy_scheme,
                        proxy_user=proxy_user,
-                       proxy_password=proxy_password)
+                       proxy_password=proxy_password,
+                       data_sources=data_sources)
 
 
 def pdf_parser(file):

@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Анализатор Стоимости Автозапчастей</title>
     <!-- Стандартные favicons -->
     <link rel="icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}" type="image/x-icon">
@@ -34,8 +35,8 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 1200px;
+            width: min(1200px, 100%);
+            box-sizing: border-box;
         }
 
         h1 {
@@ -104,10 +105,63 @@
             color: #34495e;
         }
 
-        select, input[type="file"] {
+        select, input[type="file"], input[type="text"], input[type="number"], input[type="password"] {
             width: 100%;
             padding: 8px 10px;
             font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .search-mode {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 0 18px;
+        }
+
+        .search-mode label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin: 0;
+            padding: 9px 13px;
+            border: 1px solid #d5dce2;
+            border-radius: 7px;
+            cursor: pointer;
+            white-space: normal;
+        }
+
+        .search-mode input {
+            margin: 0;
+        }
+
+        .single-search-group {
+            max-width: 520px;
+            margin: 0 auto 20px;
+            text-align: left;
+        }
+
+        .single-search-group input {
+            min-height: 42px;
+            border: 1px solid #aeb8c2;
+            border-radius: 5px;
+        }
+
+        .offer-mode-group {
+            max-width: 520px;
+            margin: 0 auto 18px;
+            text-align: left;
+        }
+
+        .offer-mode-group select {
+            min-height: 42px;
+            border: 1px solid #aeb8c2;
+            border-radius: 5px;
+            background: #fff;
         }
 
         #submitBtn {
@@ -400,21 +454,294 @@
         .field-hint[hidden] {
             display: none;
         }
+
+        .source-picker {
+            position: relative;
+            text-align: left;
+        }
+
+        .source-picker summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 37px;
+            padding: 8px 10px;
+            border: 1px solid #888;
+            border-radius: 3px;
+            box-sizing: border-box;
+            cursor: pointer;
+            color: #222;
+            background: #fff;
+            list-style: none;
+            font-size: 14px;
+        }
+
+        .source-picker summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .source-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            z-index: 20;
+            width: 100%;
+            padding: 7px;
+            box-sizing: border-box;
+            border: 1px solid #bbb;
+            border-radius: 5px;
+            background: #fff;
+            box-shadow: 0 5px 14px rgba(0, 0, 0, .16);
+        }
+
+        .source-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 6px;
+            margin: 0;
+            border-radius: 3px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .source-option:hover {
+            background: #f2f6f2;
+        }
+
+        .source-option input {
+            margin: 0;
+        }
+
+        .source-divider {
+            height: 1px;
+            margin: 4px 0;
+            border: 0;
+            background: #e5e5e5;
+        }
+
+        .source-warning {
+            margin: 12px 0;
+            padding: 10px 12px;
+            border-radius: 4px;
+            color: #805500;
+            background: #fff4d6;
+        }
+
+        .site-totals {
+            margin: 14px 0 20px;
+            padding: 14px;
+            border: 1px solid #dce7dc;
+            border-radius: 7px;
+            background: #f7fbf7;
+        }
+
+        .site-totals h4 {
+            margin: 0 0 8px;
+            color: #2c3e50;
+        }
+
+        .site-totals ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .site-totals li + li {
+            margin-top: 5px;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                min-height: 100dvh;
+                padding: 10px 8px;
+                justify-content: flex-start;
+            }
+
+            .container {
+                padding: 18px 12px;
+                border-radius: 8px;
+            }
+
+            h1 {
+                font-size: clamp(22px, 6vw, 30px);
+                line-height: 1.2;
+            }
+
+            h3 {
+                font-size: 16px;
+                line-height: 1.35;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .form-group {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .form-group label {
+                white-space: normal;
+                text-align: left;
+            }
+
+            .search-mode {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 7px;
+            }
+
+            .search-mode label {
+                justify-content: center;
+                padding: 10px 6px;
+                font-size: 14px;
+            }
+
+            .single-search-group {
+                max-width: none;
+            }
+
+            .offer-mode-group {
+                max-width: none;
+            }
+
+            .file-input-group {
+                align-items: stretch;
+                text-align: left;
+            }
+
+            .file-input-group input[type="file"] {
+                width: 100%;
+                padding: 8px;
+                box-sizing: border-box;
+            }
+
+            .proxy-container {
+                align-items: stretch;
+            }
+
+            .proxy-fields {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                width: 100%;
+                gap: 10px;
+            }
+
+            .proxy-field,
+            .proxy-field input,
+            .proxy-field select {
+                width: 100%;
+                min-width: 0;
+                box-sizing: border-box;
+            }
+
+            .proxy-link-container {
+                text-align: left;
+                overflow-wrap: anywhere;
+            }
+
+            #submitBtn {
+                width: 100%;
+                min-height: 46px;
+            }
+
+            .table-wrapper {
+                padding: 12px;
+                margin-bottom: 20px;
+                overflow: hidden;
+            }
+
+            .data-table {
+                display: block;
+                width: 100%;
+                box-shadow: none;
+            }
+
+            .data-table thead {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border: 0;
+            }
+
+            .data-table tbody,
+            .data-table tr {
+                display: block;
+                width: 100%;
+            }
+
+            .data-table tr {
+                margin: 0 0 12px;
+                border: 1px solid #dce3e8;
+                border-radius: 7px;
+                overflow: hidden;
+                background: #fff;
+            }
+
+            .data-table td {
+                display: grid;
+                grid-template-columns: minmax(105px, 42%) minmax(0, 1fr);
+                gap: 8px;
+                padding: 8px 9px;
+                border: 0;
+                border-bottom: 1px solid #edf0f2;
+                overflow-wrap: anywhere;
+            }
+
+            .data-table td:last-child {
+                border-bottom: 0;
+            }
+
+            .data-table td::before {
+                content: attr(data-label);
+                color: #58636d;
+                font-weight: bold;
+            }
+
+            .data-table a {
+                overflow-wrap: anywhere;
+            }
+
+            .sum-row,
+            .total-result,
+            .source-warning {
+                font-size: 15px;
+                line-height: 1.45;
+                overflow-wrap: anywhere;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Анализатор Стоимости Автозапчастей</h1>
-        <h3>Укажите параметры для поиска и загрузите файл</h3>
+        <h3>Укажите параметры поиска и выберите, что искать</h3>
 
         <form method="post" enctype="multipart/form-data" action="/run_process" id="uploadForm">
             <div class="form-row">
                 <div class="form-group">
-                    <label for="data_source">Источник данных:</label>
-                    <select id="data_source" name="data_source" required>
-                        <option value="emex.ru" selected>emex.ru</option>
-                        <option value="exist.ru">exist.ru</option>
-                    </select>
+                    <label id="source_label">Сайты для поиска:</label>
+                    <details id="source_picker" class="source-picker">
+                        <summary aria-labelledby="source_label">
+                            <span id="source_summary">emex.ru</span><span aria-hidden="true">▾</span>
+                        </summary>
+                        <div class="source-menu" role="group" aria-labelledby="source_label">
+                            <label class="source-option"><input type="checkbox" id="select_all_sources"> Все сайты</label>
+                            <hr class="source-divider">
+                            <label class="source-option"><input type="checkbox" name="data_sources" value="emex.ru" checked> emex.ru</label>
+                            <label class="source-option"><input type="checkbox" name="data_sources" value="exist.ru"> exist.ru</label>
+                            <label class="source-option"><input type="checkbox" name="data_sources" value="autopiter.ru"> autopiter.ru</label>
+                            <label class="source-option"><input type="checkbox" name="data_sources" value="sale-parts.ru"> sale-parts.ru — нужен API-доступ</label>
+                        </div>
+                    </details>
+                    <span class="field-hint" id="source_selection_hint">Можно выбрать один или несколько сайтов.</span>
                 </div>
 
                 <div class="form-group" id="pvz_group">
@@ -464,9 +791,30 @@
                 </div>
             </div>
 
-            <div class="file-input-group">
+            <div class="search-mode" role="radiogroup" aria-label="Что искать">
+                <label><input type="radio" name="search_mode" value="pdf" checked> Загрузить PDF</label>
+                <label><input type="radio" name="search_mode" value="single"> Одна деталь</label>
+            </div>
+
+            <div class="file-input-group" id="pdf_search_group">
                 <label for="file">PDF файл:</label>
                 <input type="file" id="file" name="file" accept=".pdf" required>
+            </div>
+
+            <div class="single-search-group" id="single_search_group" hidden>
+                <label for="part_number">Артикул детали:</label>
+                <input type="text" id="part_number" name="part_number" maxlength="100"
+                       placeholder="Например, OC90" autocomplete="off" disabled>
+                <span class="field-hint">Введите артикул, чтобы сравнить предложения выбранных сайтов.</span>
+            </div>
+
+            <div class="offer-mode-group">
+                <label for="offer_mode">Как сравнить цены:</label>
+                <select id="offer_mode" name="offer_mode">
+                    <option value="per_source" selected>Показать лучший вариант каждого сайта</option>
+                    <option value="mix">Собрать самый дешёвый микс из сайтов</option>
+                </select>
+                <span class="field-hint" id="offer_mode_hint">Отдельные предложения и ссылки каждого выбранного сайта.</span>
             </div>
 
 <!--            <div class="form-group">-->
@@ -535,28 +883,82 @@
 
     <script>
         // Параметры, зависящие от выбранного источника данных
-        const dataSourceSelect = document.getElementById('data_source');
+        const sourcePicker = document.getElementById('source_picker');
+        const sourceCheckboxes = Array.from(document.querySelectorAll('input[name="data_sources"]'));
+        const selectAllSources = document.getElementById('select_all_sources');
+        const sourceSummary = document.getElementById('source_summary');
         const pvzSelect = document.getElementById('pvz_code');
         const ratingSelect = document.getElementById('rating');
         const pvzHint = document.getElementById('pvz_hint');
         const ratingHint = document.getElementById('rating_hint');
         const proxyHint = document.getElementById('proxy_hint');
+        const searchModeRadios = Array.from(document.querySelectorAll('input[name="search_mode"]'));
+        const pdfSearchGroup = document.getElementById('pdf_search_group');
+        const singleSearchGroup = document.getElementById('single_search_group');
+        const pdfFileInput = document.getElementById('file');
+        const partNumberInput = document.getElementById('part_number');
+        const offerModeSelect = document.getElementById('offer_mode');
+        const offerModeHint = document.getElementById('offer_mode_hint');
+
+        function selectedSources() {
+            return sourceCheckboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.value);
+        }
 
         function updateSourceFields() {
-            const isExist = dataSourceSelect.value === 'exist.ru';
+            const selected = selectedSources();
+            const isExist = selected.includes('exist.ru');
+            const existOnly = selected.length === 1 && isExist;
+            const labels = selected.map((source) => source);
 
-            // У exist.ru код ПВЗ не используется: офис определяется по IP запроса
-            pvzSelect.disabled = isExist;
-            ratingSelect.disabled = isExist;
+            sourceSummary.textContent = labels.length === 1
+                ? labels[0]
+                : (labels.length ? `Выбрано сайтов: ${labels.length}` : 'Выберите сайты');
+            selectAllSources.checked = selected.length === sourceCheckboxes.length;
+            selectAllSources.indeterminate = selected.length > 0 && selected.length < sourceCheckboxes.length;
+
+            // ПВЗ нужен для Emex; рейтинг применяется ко всем выбранным сайтам, кроме Exist.
+            pvzSelect.disabled = existOnly;
+            ratingSelect.disabled = existOnly;
             pvzHint.hidden = !isExist;
             ratingHint.hidden = !isExist;
             proxyHint.textContent = isExist
-                ? 'Для Exist нужен российский резидентский или ISP-прокси; дата-центры часто блокируются.'
-                : 'Для Emex прокси необязателен: оставьте поля пустыми для прямого подключения.';
+                ? 'Для Exist нужен российский резидентский или ISP-прокси; для других сайтов прокси необязателен.'
+                : 'Прокси необязателен; его можно указать, если сайт недоступен напрямую.';
         }
 
-        dataSourceSelect.addEventListener('change', updateSourceFields);
+        function updateSearchMode() {
+            const isSingleItem = document.querySelector('input[name="search_mode"]:checked').value === 'single';
+            pdfSearchGroup.hidden = isSingleItem;
+            singleSearchGroup.hidden = !isSingleItem;
+            pdfFileInput.disabled = isSingleItem;
+            pdfFileInput.required = !isSingleItem;
+            partNumberInput.disabled = !isSingleItem;
+            partNumberInput.required = isSingleItem;
+        }
+
+        function updateOfferModeHint() {
+            offerModeHint.textContent = offerModeSelect.value === 'mix'
+                ? 'Для каждой детали выберем самое дешёвое предложение среди выбранных сайтов.'
+                : 'Покажем отдельное лучшее предложение и ссылку каждого выбранного сайта.';
+        }
+
+        sourceCheckboxes.forEach((checkbox) => checkbox.addEventListener('change', updateSourceFields));
+        selectAllSources.addEventListener('change', () => {
+            sourceCheckboxes.forEach((checkbox) => { checkbox.checked = selectAllSources.checked; });
+            updateSourceFields();
+        });
+        sourcePicker.querySelector('summary').addEventListener('click', (event) => {
+            event.preventDefault();
+            sourcePicker.open = !sourcePicker.open;
+        });
+        searchModeRadios.forEach((radio) => radio.addEventListener('change', updateSearchMode));
+        offerModeSelect.addEventListener('change', updateOfferModeHint);
+        document.addEventListener('click', (event) => {
+            if (!sourcePicker.contains(event.target)) sourcePicker.open = false;
+        });
         updateSourceFields();
+        updateSearchMode();
+        updateOfferModeHint();
     </script>
 
     <script>
@@ -565,6 +967,12 @@
             const formData = new FormData(e.target);
             const resultDiv = document.getElementById('result');
             const submitBtn = document.getElementById('submitBtn');
+            const isSingleItemSearch = document.querySelector('input[name="search_mode"]:checked').value === 'single';
+
+            if (!selectedSources().length) {
+                showMessage(resultDiv, 'error', 'Выберите хотя бы один сайт для поиска.');
+                return;
+            }
 
             submitBtn.disabled = true;
 
@@ -598,13 +1006,17 @@
                 if (result.found || result.not_found) {
                 // Таблица с найденными запчастями
                     if (result.found && result.found.rows.length > 0) {
-                        createTable(resultDiv, result.found, 'Найдено по заданным параметрам', 'found-table', 'table-title-found');
+                        createTable(resultDiv,
+                                    result.found,
+                                    isSingleItemSearch ? 'Предложения по артикулу' : 'Найдено по заданным параметрам',
+                                    'found-table',
+                                    'table-title-found');
 
                         // Добавляем строку с суммой
                         if (result.found.total_sum) {
                             const sumDiv = document.createElement('div');
                             sumDiv.className = 'sum-row found-sum';
-                            sumDiv.innerHTML = `Общая стоимость найденных запчастей: <span class="sum-value">${formatMoney(result.found.total_sum)} руб.</span>`;
+                            sumDiv.innerHTML = `Итого по самым дешёвым предложениям: <span class="sum-value">${formatMoney(result.found.total_sum)} руб.</span>`;
                             resultDiv.appendChild(sumDiv);
                         }
                     }
@@ -633,6 +1045,31 @@
                             (<span class="${percentClass}">${result.total_comparison.percentage > 0 ? '+' : ''}${result.total_comparison.percentage}%</span>)
                         `;
                         resultDiv.appendChild(totalDiv);
+                    }
+                    if (result.source_totals && result.source_totals.length) {
+                        const totalsPanel = document.createElement('div');
+                        totalsPanel.className = 'site-totals';
+                        const totalsTitle = document.createElement('h4');
+                        totalsTitle.textContent = 'Сводка по сайтам';
+                        totalsPanel.appendChild(totalsTitle);
+
+                        const totalsList = document.createElement('ul');
+                        result.source_totals.forEach((siteTotal) => {
+                            const item = document.createElement('li');
+                            item.textContent = `${siteTotal.source}: найдено ${siteTotal.found_count} из ${siteTotal.total_count} позиций, сумма найденных предложений ${formatMoney(siteTotal.total_sum)} руб.`;
+                            totalsList.appendChild(item);
+                        });
+                        totalsPanel.appendChild(totalsList);
+                        resultDiv.appendChild(totalsPanel);
+                    }
+                    if (result.source_errors && Object.keys(result.source_errors).length) {
+                        const warning = document.createElement('p');
+                        warning.className = 'source-warning';
+                        warning.textContent = 'Не удалось получить данные с некоторых сайтов: ' +
+                            Object.entries(result.source_errors)
+                                .map(([source, message]) => `${source}: ${message}`)
+                                .join(' · ');
+                        resultDiv.appendChild(warning);
                     }
                 } else {
                     // console.log("Ответ сервера:", result); // Для отладки
@@ -765,6 +1202,7 @@
 
                 row.forEach((cell, cellIndex) => {
                     const td = document.createElement('td');
+                    td.dataset.label = tableData.headers[cellIndex] || '';
 
                     // Если ячейка - объект с ссылкой
                     if (typeof cell === 'object' && cell.url) {

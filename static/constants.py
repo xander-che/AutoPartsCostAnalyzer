@@ -10,6 +10,12 @@ DOMAIN_PATTERN = r'https?://([^/]+)'
 BASE_PVZ = '38140'
 DATA_SOURCE_EMEX = 'emex.ru'
 DATA_SOURCE_EXIST = 'exist.ru'
+DATA_SOURCE_AUTOPITER = 'autopiter.ru'
+DATA_SOURCE_SALE_PARTS = 'sale-parts.ru'
+DATA_SOURCES = (DATA_SOURCE_EMEX,
+                DATA_SOURCE_EXIST,
+                DATA_SOURCE_AUTOPITER,
+                DATA_SOURCE_SALE_PARTS)
 BRAND_DETECT = ['марка', 'модель']
 TARGET_JSON_KEYS = ['originals', 'analogs', 'replacements']
 FOUND_TABLE_HEADER = ['Номер (оригинал)',
