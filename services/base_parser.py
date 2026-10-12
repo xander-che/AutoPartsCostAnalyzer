@@ -25,6 +25,7 @@ class BaseParser:
 
     apply_rating_filter = True
     requires_proxy = True
+    source_name = 'источник'
     source_error_message = NO_DATA_FOUND
 
     def __init__(self, entry_params: dict, pvz: str = BASE_PVZ, brand: str = '', data: list = None):
@@ -123,11 +124,13 @@ class BaseParser:
         try:
             for index, item in enumerate(self.data):
                 try:
-                    result_table.append(self.fetch_offers(session, item))
+                    result_table.append(self._fetch_with_optional_proxy_fallback(session, item))
                 except (requests.exceptions.ConnectionError,
                         requests.exceptions.SSLError) as error:
                     if self.proxies:
-                        logger.warning('Ошибка прокси: %s', error)
+                        # Не выводим исключение целиком: его текст может содержать
+                        # адрес прокси вместе с данными авторизации.
+                        logger.warning('Ошибка соединения через прокси у %s', self.source_name)
                         return [ERROR_NOT_PROXY_ENABLED]
 
                     logger.warning('Ошибка соединения с источником: %s', error)
@@ -149,6 +152,22 @@ class BaseParser:
             return [self.source_error_message]
 
         return self.analyze_offers(result_table)
+
+    def _fetch_with_optional_proxy_fallback(self, session: requests.Session, item: list) -> list:
+        """Повторяет запрос напрямую, если необязательный прокси не подходит источнику."""
+
+        try:
+            return self.fetch_offers(session, item)
+        except (requests.exceptions.ConnectionError,
+                requests.exceptions.SSLError,
+                SourceAccessError):
+            if not self.proxies or self.requires_proxy:
+                raise
+
+            logger.info('Запрос к %s через прокси не прошёл; повторяем напрямую', self.source_name)
+            session.proxies.clear()
+            self.proxies = {}
+            return self.fetch_offers(session, item)
 
     def fetch_offers(self, session: requests.Session, item: list) -> list:
         raise NotImplementedError
