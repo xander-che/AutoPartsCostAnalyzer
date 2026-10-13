@@ -8,7 +8,7 @@ from controllers.controller import params
 from static.messages import ERROR_INTERNAL
 
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = int(os.getenv('MAX_UPLOAD_MB', '30')) * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = int(os.getenv('MAX_UPLOAD_MB', '50')) * 1024 * 1024
 app.json.ensure_ascii = False
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
